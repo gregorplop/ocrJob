@@ -20,4 +20,4 @@ pip install ocrmypdf
 -For ocrJob use:  
 choco install xpdf-utils
 
--ALL THE ABOVE NEED TO BE IN THE SYSTEM PATH
+**all the above need to be in the system path**
