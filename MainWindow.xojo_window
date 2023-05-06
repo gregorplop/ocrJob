@@ -1436,11 +1436,11 @@ Begin DesktopWindow MainWindow
          InitialParent   =   "MainTabPanel"
          Italic          =   False
          Left            =   740
-         LockBottom      =   False
+         LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
          LockRight       =   True
-         LockTop         =   True
+         LockTop         =   False
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   4
@@ -1620,11 +1620,11 @@ Begin DesktopWindow MainWindow
          InitialParent   =   "MainTabPanel"
          Italic          =   False
          Left            =   608
-         LockBottom      =   False
+         LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
          LockRight       =   True
-         LockTop         =   True
+         LockTop         =   False
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   6
@@ -2929,15 +2929,15 @@ End
 	#tag Event
 		Sub DataAvailable()
 		  ConsoleView.AddText me.ReadAll
-		   
+		  
 		End Sub
 	#tag EndEvent
 	#tag Event
 		Sub Completed()
+		  ActiveJob.FinalizeDocument(CurrentDoc , if(KillOCR , 130 , me.ExitCode))
+		  DocList.CellTextAt(CurrentDoc.ListIndex , 4) = CurrentDoc.ExitCode.ToString
+		  
 		  if KillOCRFlag then // job killed
-		    
-		    ActiveJob.FinalizeDocument(CurrentDoc , 130) // 130 being the Ctr+C termination code of ocrmypdf.
-		    DocList.CellTextAt(CurrentDoc.ListIndex , 4) = str(130)
 		    
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    ConsoleView.AddText "Killed ocrmypdf job!" + EndOfLine
@@ -2947,17 +2947,12 @@ End
 		    
 		  else  // go on until EOJ
 		    
-		    ActiveJob.FinalizeDocument(CurrentDoc, me.ExitCode)
-		    
-		    DocList.CellTextAt(CurrentDoc.ListIndex , 4) = me.ExitCode.ToString
-		    
 		    ConsoleView.AddText "End ocrmypdf, exit code = " + me.ExitCode.ToString + EndOfLine
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    ConsoleView.AddText EndOfLine
 		    
 		    
-		    dim EOJ as Boolean = OCRNextDocument // re-start the async processing
-		    
+		    dim EOJ as Boolean = OCRNextDocument // re-start the async processing -or not, if EOJ
 		    if EOJ then SetMode(AppStates.OCROK) 
 		    
 		  end if
@@ -2984,7 +2979,7 @@ End
 		  else // survey has been manually killed
 		    
 		    Timer.CallLater(100 , AddressOf SurveyKilled)
-		     
+		    
 		  end if
 		  
 		  
@@ -3257,6 +3252,14 @@ End
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="KillOCRFlag"
+		Visible=false
+		Group="Behavior"
+		InitialValue=""
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="AllDependenciesOK"
 		Visible=false
 		Group="Behavior"
 		InitialValue=""
