@@ -2050,34 +2050,26 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub KillOCR()
-		  KillOCRFlag = true //signal job kill
-		  WorkShell.Close    // terminate running shell
-		  
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function OCRNextDocument() As Boolean
+		Function OCRNextDocument(jobDoc as ocrJob.JobDocument) As Boolean
 		  // returns end-of-job (EOJ)
 		  MainProgressBar.Value = MainProgressBar.Value + 1
 		  
-		  CurrentDoc = ActiveJob.GetNextDocument
+		  jobDoc = ActiveJob.GetNextDocument
 		  
-		  if IsNull(CurrentDoc) then Return true
+		  if IsNull(jobDoc) then Return true
 		  
-		  DocList.SelectedRowIndex = CurrentDoc.ListIndex
+		  DocList.SelectedRowIndex = jobDoc.ListIndex
 		  
-		  ConsoleView.AddText "Document start at " + CurrentDoc.OCRStartTimestamp.SQLDateTime + EndOfLine
-		  ConsoleView.AddText "Input file : " + CurrentDoc.InputDocFile.NativePath + EndOfLine
-		  ConsoleView.AddText if(IsNull(CurrentDoc.OutputDocFile) , "No output pdf" , "Output file : " + CurrentDoc.OutputDocFile.NativePath) + EndOfLine
-		  ConsoleView.AddText if(IsNull(CurrentDoc.TextFile) , "No text file output" , "Text file : " + CurrentDoc.TextFile.NativePath) + EndOfLine
+		  ConsoleView.AddText "Document start at " + jobDoc.OCRStartTimestamp.SQLDateTime + EndOfLine
+		  ConsoleView.AddText "Input file : " + jobDoc.InputDocFile.NativePath + EndOfLine
+		  ConsoleView.AddText if(IsNull(jobDoc.OutputDocFile) , "No output pdf" , "Output file : " + jobDoc.OutputDocFile.NativePath) + EndOfLine
+		  ConsoleView.AddText if(IsNull(jobDoc.TextFile) , "No text file output" , "Text file : " + jobDoc.TextFile.NativePath) + EndOfLine
 		  ConsoleView.AddText EndOfLine
-		  ConsoleView.AddText "> ocrmypdf " + CurrentDoc.CmdLineParams + EndOfLine
+		  ConsoleView.AddText "> ocrmypdf " + jobDoc.CmdLineParams + EndOfLine
 		  ConsoleView.AddText EndOfLine
 		  
-		  WorkShell.Execute("ocrmypdf " + CurrentDoc.CmdLineParams)
+		  CurrentDoc = jobDoc
+		  WorkShell.Execute("ocrmypdf " + jobDoc.CmdLineParams)
 		  
 		  Return false
 		  
@@ -2113,7 +2105,7 @@ End
 		  ConsoleView.AddText EndOfLine
 		  
 		  
-		  dim EOJ as Boolean = OCRNextDocument // start the async processing
+		  dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // start the async processing
 		  
 		  if EOJ then
 		    SetMode(AppStates.OCRFatalError) // this shouldn't happen: getting it at this point means an empty job!
@@ -2181,7 +2173,7 @@ End
 		    ExportDocListBtn.Enabled = false
 		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
 		    
-		    KillSurvey = false
+		    KillSurveyFlag = false
 		    
 		    MainProgressBar.Visible = true
 		    MainProgressBar.Indeterminate = true
@@ -2291,6 +2283,8 @@ End
 		    SurveyStartCancelBtn.Caption = "Survey Now!"
 		    
 		    CancelJobBtn.Enabled = False
+		    CancelJobBtn.Caption = "Cancel Job"
+		    
 		    StartJobBtn.Enabled = false
 		    ClearSurveyBtn.Enabled = true
 		    ExportDocListBtn.Enabled = true
@@ -2339,7 +2333,7 @@ End
 
 	#tag Method, Flags = &h0
 		Sub SurveyCancel()
-		  KillSurvey = true
+		  KillSurveyFlag = true
 		  
 		End Sub
 	#tag EndMethod
@@ -2437,7 +2431,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		KillSurvey As Boolean
+		KillSurveyFlag As Boolean
 	#tag EndProperty
 
 
@@ -2863,7 +2857,8 @@ End
 #tag Events CancelJobBtn
 	#tag Event
 		Sub Pressed()
-		  KillOCR
+		  KillOCRFlag = true
+		  me.Caption = "Cancelling..."
 		  
 		End Sub
 	#tag EndEvent
@@ -2934,7 +2929,7 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub Completed()
-		  ActiveJob.FinalizeDocument(CurrentDoc , if(KillOCR , 130 , me.ExitCode))
+		  ActiveJob.FinalizeDocument(CurrentDoc , if(KillOCRFlag , 130 , me.ExitCode))
 		  DocList.CellTextAt(CurrentDoc.ListIndex , 4) = CurrentDoc.ExitCode.ToString
 		  
 		  if KillOCRFlag then // job killed
@@ -2952,7 +2947,7 @@ End
 		    ConsoleView.AddText EndOfLine
 		    
 		    
-		    dim EOJ as Boolean = OCRNextDocument // re-start the async processing -or not, if EOJ
+		    dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // re-start the async processing -or not, if EOJ
 		    if EOJ then SetMode(AppStates.OCROK) 
 		    
 		  end if
@@ -2964,13 +2959,13 @@ End
 		Sub Run()
 		  dim pdfList() as FolderItem
 		  
-		  PDFSurvey(ActiveJob.Conf.BaseFolder , pdfList , ActiveJob.Conf.Recursive, KillSurvey)
+		  PDFSurvey(ActiveJob.Conf.BaseFolder , pdfList , ActiveJob.Conf.Recursive, KillSurveyFlag)
 		  
-		  if not KillSurvey then
+		  if not KillSurveyFlag then
 		    
-		    ActiveJob.LoadSurveyData(pdfList, KillSurvey)
+		    ActiveJob.LoadSurveyData(pdfList, KillSurveyFlag)
 		    
-		    if not KillSurvey then
+		    if not KillSurveyFlag then
 		      Timer.CallLater(100 , AddressOf SurveyCompleteOK)
 		    else
 		      Timer.CallLater(100 , AddressOf SurveyKilled)
@@ -3243,7 +3238,7 @@ End
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="KillSurvey"
+		Name="KillSurveyFlag"
 		Visible=false
 		Group="Behavior"
 		InitialValue=""
