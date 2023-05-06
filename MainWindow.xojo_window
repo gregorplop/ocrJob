@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   1
+      Value           =   0
       Visible         =   True
       Width           =   860
       Begin DesktopListBox DocList
@@ -1822,23 +1822,29 @@ End
 
 	#tag Method, Flags = &h0
 		Sub BuildDocList()
-		  dim ListRow(5) as String
+		  dim ListRow(7) as String
 		  
 		  for i as Integer = 0 to ActiveJob.Folders.LastIndex
 		    
 		    for j as Integer = 0 to ActiveJob.Folders(i).Documents.LastIndex
 		      
 		      ListRow(0) = integer(DocList.RowCount + 1).ToString
-		      ListRow(1) = ActiveJob.Folders(i).JobFolderitem.NativePath.Replace(ActiveJob.Conf.BaseFolder.NativePath , "")
-		      ListRow(2) = ActiveJob.Folders(i).Documents(j).InputDocFile.Name
-		      ListRow(3) = ActiveJob.Folders(i).Documents(j).Pages.ToString
-		      ListRow(4) = ActiveJob.Folders(i).Documents(j).ExitCode.ToString
-		      ListRow(5) = if(isnull(ActiveJob.Folders(i).Documents(j).OutputDocFile) , "" , ActiveJob.Folders(i).Documents(j).OutputDocFile.Name) 
+		      ListRow(1) = ActiveJob.Folders(i).Documents(j).InputDocFile.Name
+		      ListRow(2) = ActiveJob.Folders(i).Documents(j).Pages.ToString
+		      ListRow(3) = ocrJob.ocrmypdfExitCodeDescription(ActiveJob.Folders(i).Documents(j).ExitCode)
+		      ListRow(4) = ActiveJob.Folders(i).Documents(j).GetDuration4Display
+		      ListRow(5) = ActiveJob.Folders(i).JobFolderitem.NativePath
+		      ListRow(6) = if(isnull(ActiveJob.Folders(i).Documents(j).OutputDocFile) , "" , ActiveJob.Folders(i).Documents(j).OutputDocFile.Name) 
+		      ListRow(7) = if(isnull(ActiveJob.Folders(i).Documents(j).TextFile) , "" , ActiveJob.Folders(i).Documents(j).TextFile.Name) 
+		      
 		      
 		      DocList.AddRow ListRow
 		      
-		      DocList.CellTagAt(DocList.LastRowIndex , 2) = ActiveJob.Folders(i).Documents(j).InputDocFile
-		      DocList.CellTagAt(DocList.LastRowIndex , 5) = ActiveJob.Folders(i).Documents(j).OutputDocFile
+		      DocList.CellTagAt(DocList.LastRowIndex , 1) = ActiveJob.Folders(i).Documents(j).InputDocFile
+		      DocList.CellTagAt(DocList.LastRowIndex , 3) = ActiveJob.Folders(i).Documents(j).ExitCode
+		      DocList.CellTagAt(DocList.LastRowIndex , 5) = ActiveJob.Folders(i).JobFolderitem
+		      DocList.CellTagAt(DocList.LastRowIndex , 6) = ActiveJob.Folders(i).Documents(j).OutputDocFile
+		      DocList.CellTagAt(DocList.LastRowIndex , 7) = ActiveJob.Folders(i).Documents(j).TextFile
 		      
 		    next j
 		    
@@ -1935,6 +1941,19 @@ End
 		  
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DocListUpdate(doc as ocrJob.JobDocument)
+		  DocList.CellTextAt(CurrentDoc.ListIndex , 3) = ocrJob.ocrmypdfExitCodeDescription(CurrentDoc.ExitCode)
+		  DocList.CellTagAt(CurrentDoc.ListIndex , 3) = CurrentDoc.ExitCode
+		  
+		  DocList.CellTextAt(CurrentDoc.ListIndex , 4) = CurrentDoc.GetDuration4Display
+		  DocList.CellTagAt(CurrentDoc.ListIndex, 4) = CurrentDoc.OCREndTimestamp.SecondsFrom1970 - CurrentDoc.OCRStartTimestamp.SecondsFrom1970
+		  
+		  
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -2126,7 +2145,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub SetMode(targetAppState as AppStates)
+		Sub SetMode(targetAppState as AppStates, optional FooterMsg as string)
 		  select case targetAppState
 		    
 		  case AppStates.Setup
@@ -2324,6 +2343,7 @@ End
 		    
 		  end Select
 		  
+		  if not FooterMsg.IsEmpty then FooterLabel.Text = FooterMsg
 		  
 		  AppState = targetAppState
 		  
@@ -2457,16 +2477,20 @@ End
 #tag Events DocList
 	#tag Event
 		Sub Opening()
-		  me.ColumnCount = 6
+		  me.ColumnCount = 8
+		  
 		  me.HeaderAt(0) = "#"
-		  me.HeaderAt(1) = "Relative Folder"
-		  me.HeaderAt(2) = "Source Filename"
-		  me.HeaderAt(3) = "Pages"
-		  me.HeaderAt(4) = "Outcome"
-		  me.HeaderAt(5) = "Target Filename"
+		  me.HeaderAt(1) = "Source PDF"
+		  me.HeaderAt(2) = "Pages"
+		  me.HeaderAt(3) = "Outcome"
+		  me.HeaderAt(4) = "Duration"
+		  me.HeaderAt(5) = "Source folder"
+		  me.HeaderAt(6) = "Target PDF" 
+		  me.HeaderAt(7) = "Target TXT"
+		  
 		  me.AllowResizableColumns = true
 		  me.ColumnSortTypeAt(DesktopListBox.AllColumns) = DesktopListBox.SortTypes.NotSortable
-		  me.ColumnWidths = "50,22%,22%,70,22%,22%"
+		  me.ColumnWidths = "50,20%,70,20%,100,20%,20%,20%"
 		  
 		  me.HasHeader = true
 		  
@@ -2484,7 +2508,7 @@ End
 		  
 		  Select case column
 		    
-		  case 2 , 5 // points to pdf file
+		  case 1 , 5 , 6 , 7 // point to folderitems
 		    
 		    dim f as FolderItem = me.CellTagAt(row , column)
 		    
@@ -2492,6 +2516,13 @@ End
 		      if f.Exists then f.Open
 		    end if
 		    
+		  case 3
+		    
+		    if me.CellTextAt(row , column).IsNumeric then
+		      me.CellTextAt(row , column) = ocrJob.ocrmypdfExitCodeDescription(me.CellTagAt(row , column).IntegerValue)
+		    else
+		      me.CellTextAt(row , column) = me.CellTagAt(row , column).StringValue
+		    end if
 		    
 		  end Select
 		  
@@ -2929,8 +2960,8 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub Completed()
-		  ActiveJob.FinalizeDocument(CurrentDoc , if(KillOCRFlag , 130 , me.ExitCode))
-		  DocList.CellTextAt(CurrentDoc.ListIndex , 4) = CurrentDoc.ExitCode.ToString
+		  ActiveJob.FinalizeDocument(CurrentDoc , me.ExitCode)
+		  DocListUpdate(CurrentDoc)
 		  
 		  if KillOCRFlag then // job killed
 		    
@@ -2938,7 +2969,7 @@ End
 		    ConsoleView.AddText "Killed ocrmypdf job!" + EndOfLine
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    
-		    SetMode(AppStates.OCRFatalError)
+		    SetMode(AppStates.OCRFatalError , "OCR Job cancelled by user")
 		    
 		  else  // go on until EOJ
 		    
@@ -2948,7 +2979,7 @@ End
 		    
 		    
 		    dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // re-start the async processing -or not, if EOJ
-		    if EOJ then SetMode(AppStates.OCROK) 
+		    if EOJ then SetMode(AppStates.OCROK , "Job complete, duration " + ActiveJob.GetDuration4Display)
 		    
 		  end if
 		End Sub

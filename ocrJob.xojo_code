@@ -12,6 +12,24 @@ Protected Module ocrJob
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function Duration4Display(startStamp as DateTime, endStamp as DateTime) As string
+		  if IsNull(endStamp) or IsNull(startStamp) then Return "N/A"
+		  
+		  dim d as DateInterval = endStamp - startStamp
+		  
+		  dim dd as String
+		  
+		  dd = Format(d.Hours , "00") + ":" + Format(d.Minutes , "00") + ":" + Format(d.Seconds , "00")
+		  
+		  if d.Days > 0 then dd = d.Days.ToString + " " + dd
+		  
+		  Return dd
+		  
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Function Extension(extends f as FolderItem) As String
 		  dim filename() as String = f.Name.Split(".")
@@ -89,8 +107,10 @@ Protected Module ocrJob
 		Function ocrmypdfExitCodeDescription(exitcode as Integer) As string
 		  select case exitcode
 		    
+		  case -3
+		    Return "ocrJob Error"
 		  case -2
-		    return "ocrJob Error"
+		    return "ocrJob Cancel"
 		  case -1
 		    return "Pending"
 		  case 0

@@ -8,6 +8,12 @@ Protected Class JobDocument
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function GetDuration4Display() As string
+		  Return Duration4Display(OCREndTimestamp , OCRStartTimestamp)
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
 		CmdLineParams As String
@@ -31,7 +37,6 @@ Protected Class JobDocument
 			10  ExitCode.pdfa_conversion_failed  A valid PDF was created, PDF/A conversion failed. The file will be available.
 			15  ExitCode.other_error             Some other error occurred.
 			130 ExitCode.ctrl_c                  The program was interrupted by pressing Ctrl+C.
-			
 		#tag EndNote
 		ExitCode As Integer = -1
 	#tag EndProperty

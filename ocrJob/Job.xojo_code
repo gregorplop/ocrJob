@@ -90,7 +90,7 @@ Protected Class Job
 		      select case Conf.OutputFilenameAppendumPolicy
 		        
 		      case ocrJob.OutputFilenameAppendumPolicies.Prefix
-		         doc.OutputDocFile = doc.InputDocFile.Parent.Child(Conf.OutputFilenameAppendumValue + doc.InputDocFile.Name)
+		        doc.OutputDocFile = doc.InputDocFile.Parent.Child(Conf.OutputFilenameAppendumValue + doc.InputDocFile.Name)
 		        
 		      case ocrJob.OutputFilenameAppendumPolicies.Suffix
 		        doc.OutputDocFile = doc.InputDocFile.Parent.Child(doc.InputDocFile.NameWithoutExtension + Conf.OutputFilenameAppendumValue + "." + doc.InputDocFile.Extension)
@@ -168,10 +168,6 @@ Protected Class Job
 		  
 		  // update stats here
 		  
-		  if Outcome = 130 then // job has been killed
-		    DeleteCreatedFiles  // cleanup
-		  end if
-		  
 		End Sub
 	#tag EndMethod
 
@@ -185,6 +181,12 @@ Protected Class Job
 		  
 		  Return -1
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetDuration4Display() As string
+		  Return Duration4Display(Stats.JobEndTimestamp , Stats.JobStartTimestamp)
 		End Function
 	#tag EndMethod
 
@@ -355,6 +357,14 @@ Protected Class Job
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Killed"
+			Visible=false
+			Group="Behavior"
+			InitialValue="false"
+			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
