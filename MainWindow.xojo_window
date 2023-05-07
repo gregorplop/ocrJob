@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   3
+      Value           =   2
       Visible         =   True
       Width           =   860
       Begin DesktopListBox DocList
@@ -119,7 +119,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   541
+         Height          =   504
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -1414,7 +1414,7 @@ Begin DesktopWindow MainWindow
          TabIndex        =   3
          TabPanelIndex   =   2
          TabStop         =   True
-         Tooltip         =   ""
+         Tooltip         =   "Cancelling the job automatically deletes any newly created files. If you opted for overwriting original files, they are not reverted to their initial contents."
          Top             =   130
          Transparent     =   False
          Underline       =   False
@@ -1629,6 +1629,38 @@ Begin DesktopWindow MainWindow
          Scope           =   2
          TabIndex        =   6
          TabPanelIndex   =   2
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   646
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   120
+      End
+      Begin DesktopButton SaveConsoleBtn
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Cancel          =   False
+         Caption         =   "Save Console"
+         Default         =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   0.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   740
+         LockBottom      =   True
+         LockedInPosition=   False
+         LockLeft        =   False
+         LockRight       =   True
+         LockTop         =   False
+         MacButtonStyle  =   0
+         Scope           =   2
+         TabIndex        =   1
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   646
@@ -2133,6 +2165,38 @@ End
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SaveConsoleOutput(file as FolderItem, byref ErrorMsg as string) As Boolean
+		  ErrorMsg = ""
+		  
+		  if IsNull(file) then
+		    ErrorMsg = "Invalid text file path"
+		    Return false
+		  end if
+		  
+		  if file.Exists then
+		    ErrorMsg = "Text file exists"
+		    Return false
+		  end if
+		  
+		  
+		  try
+		    dim stream as TextOutputStream = TextOutputStream.Create(file)
+		    
+		    stream.Write(ConsoleView.Text)
+		    
+		    stream.Close
+		    
+		  Catch e as IOException
+		    ErrorMsg = "Error creating console contents file: " + e.ErrorNumber.ToString
+		    Return false
+		  end try
+		  
+		  Return true
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -2963,6 +3027,19 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events SaveConsoleBtn
+	#tag Event
+		Sub Pressed()
+		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , "console.txt")
+		  dim ErrorMsg as String
+		  
+		  if not SaveConsoleOutput(f , ErrorMsg) then
+		    MessageBox ErrorMsg
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events QuitBtn
 	#tag Event
 		Sub Pressed()
@@ -3000,7 +3077,11 @@ End
 		    
 		    
 		    dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // re-start the async processing -or not, if EOJ
-		    if EOJ then SetMode(AppStates.OCROK , "Job complete, duration " + ActiveJob.GetDuration4Display)
+		    if EOJ then 
+		      SetMode(AppStates.OCROK , "Job complete, duration " + ActiveJob.GetDuration4Display)
+		      ConsoleView.AddText "Job complete, duration " + ActiveJob.GetDuration4Display + EndOfLine + EndOfLine
+		      //todo: display stats
+		    end If
 		    
 		  end if
 		End Sub
@@ -3287,6 +3368,7 @@ End
 			"6 - OCRFatalError"
 			"7 - OCROK"
 			"8 - OCRWarnings"
+			"9 - NoChange"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty

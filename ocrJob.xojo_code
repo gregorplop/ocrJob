@@ -321,7 +321,7 @@ Protected Module ocrJob
 		
 	#tag EndNote
 
-	#tag Note, Name = MIT LICENSE
+	#tag Note, Name = LICENSE
 		MIT LICENSE
 		
 		Copyright (c) 2023 Georgios Poulopoulos
