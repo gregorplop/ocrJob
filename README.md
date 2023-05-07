@@ -41,4 +41,4 @@ ocrJob contains no Windows-specific code, so theoretically you can build for oth
 
 ## Notes for developers
 * If you need to implement the batch engine functionality in a console/service application, you will find everything you need in the ocrJob module.
-* 
+
