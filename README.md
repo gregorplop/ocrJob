@@ -1,7 +1,7 @@
 # ocrJob
 #### An ocrmypdf front-end / batch job designer. Currently supported for Windows.
 
-## A GUI application for
+## A GUI application for:
 + Automatically surveying a folder tree, looking for PDF documents
 + Configuring a set of basic parameters for ocrmypdf/Tesseract
 + Starting and monitoring the progress/outcomes of a batch OCR job for every single document file
@@ -38,7 +38,11 @@ ocrJob contains no Windows-specific code, so theoretically you can build for oth
 
 ## Notes for users
 * If you experience erratic behavior, try turning off your anti-virus application. Also make sure this application runs on a relatively fast workstation.
-
+* Cancelling a running job will terminate the batch run on the following file. It will also remove all newly created files. If you opted for replacing the original files, they will not be reverted to their initial content.
+* On the Job Progress list:
+    * Double-clicking on a file name cell, will open the file using the default viewer
+    * Double-clicking on a folder name cell, will open the folder using the OS file manager (eg Windows Explorer) 
+    * Double-clicking on an Outcome cell, will show the numeric error code.
 ## Notes for developers
 * If you need to implement the batch engine functionality in a console/service application, you will find everything you need in the ocrJob module.
 
