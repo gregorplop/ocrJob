@@ -1,5 +1,5 @@
 # ocrJob
-#### An ocrmypdf front-end / batch job designer
+#### An ocrmypdf front-end / batch job designer. Currently supported for Windows.
 
 ## A GUI application for
 + Automatically surveying a folder tree, looking for PDF documents
