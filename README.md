@@ -36,7 +36,9 @@ This application has been created and tested on Windows 10/11. We also provide a
 Although Xojo can compile binaries for MacOS and Linux, we do not build or test for these.  
 ocrJob contains no Windows-specific code, so theoretically you can build for other platforms and it will most likely work. But you're on your own in this.
 
-## Notes
+## Notes for users
 * If you experience erratic behavior, try turning off your anti-virus application. Also make sure this application runs on a relatively fast workstation.
 
-
+## Notes for developers
+* If you need to implement the batch engine functionality in a console/service application, you will find everything you need in the ocrJob module.
+* 
