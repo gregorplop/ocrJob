@@ -21,7 +21,7 @@ Protected Class JobDocument
 
 	#tag Property, Flags = &h0
 		#tag Note
-			-2                                   Application error
+			-2                                   OcrJob error
 			-1                                   File not processed yet
 			
 			0   ExitCode.ok                      Everything worked as expected.

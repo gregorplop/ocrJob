@@ -1,23 +1,27 @@
 #tag Class
 Protected Class JobStatistics
 	#tag Property, Flags = &h0
-		DocsFailed As Integer
+		DocsFailed As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		DocsProcessed As Integer
+		DocsProcessed As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		DocsSkippedOCR As Integer
+		DocsProcessedWithWarnings As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		DocsTotal As Integer
+		DocsSkippedOCR As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		FoldersTotal As Integer
+		DocsTotal As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		FoldersTotal As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -29,7 +33,7 @@ Protected Class JobStatistics
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		PagesTotal As Integer
+		PagesTotal As Integer = 0
 	#tag EndProperty
 
 

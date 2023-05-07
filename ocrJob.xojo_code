@@ -347,22 +347,6 @@ Protected Module ocrJob
 	#tag EndNote
 
 
-	#tag Constant, Name = ColorDONEOK, Type = Color, Dynamic = False, Default = \"&c00A800", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = ColorDONEWARNINGS, Type = Color, Dynamic = False, Default = \"&cFF8040", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = ColorERROR, Type = Color, Dynamic = False, Default = \"&cFF0000", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = ColorSETUP, Type = Color, Dynamic = False, Default = \"&c0080C0", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = ColorWORKING, Type = Color, Dynamic = False, Default = \"&c808000", Scope = Public
-	#tag EndConstant
-
-
 	#tag Enum, Name = LoggingPolicies, Type = Integer, Flags = &h0
 		NoLog
 		LogFileInFolders

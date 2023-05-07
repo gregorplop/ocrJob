@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   0
+      Value           =   3
       Visible         =   True
       Width           =   860
       Begin DesktopListBox DocList
@@ -113,7 +113,7 @@ Begin DesktopWindow MainWindow
          Bold            =   False
          Enabled         =   True
          FontName        =   "System"
-         FontSize        =   0.0
+         FontSize        =   14.0
          FontUnit        =   0
          Format          =   ""
          HasBorder       =   True
@@ -1268,10 +1268,10 @@ Begin DesktopWindow MainWindow
          Left            =   40
          LineHeight      =   0.0
          LineSpacing     =   1.0
-         LockBottom      =   False
+         LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   True
-         LockRight       =   False
+         LockRight       =   True
          LockTop         =   True
          MaximumCharactersAllowed=   0
          Multiline       =   True
@@ -1290,7 +1290,7 @@ Begin DesktopWindow MainWindow
          UnicodeMode     =   1
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   776
+         Width           =   820
       End
       Begin DesktopLabel LicenseHeader
          AllowAutoDeactivate=   True
@@ -1813,9 +1813,8 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Opening()
-		  SetMode(AppStates.Setup)
+		  SetMode(AppStates.Setup , "" , 3)
 		  
-		  MainTabPanel.SelectedPanelIndex = 3
 		End Sub
 	#tag EndEvent
 
@@ -2145,11 +2144,12 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub SetMode(targetAppState as AppStates, optional FooterMsg as string)
+		Sub SetMode(targetAppState as AppStates, optional FooterMsg as string, optional PanelIndex as integer = -1)
 		  select case targetAppState
 		    
 		  case AppStates.Setup
 		    
+		    me.Title = "ocrJob - Setup"
 		    SetColorTheme(ColorSETUP)
 		    
 		    EnableParamsUI(True)
@@ -2175,6 +2175,7 @@ End
 		    
 		  case AppStates.SurveyInProgress
 		    
+		    me.Title = "ocrJob - Survey"
 		    SetColorTheme(ColorWORKING)
 		    
 		    EnableParamsUI(False)
@@ -2200,6 +2201,7 @@ End
 		    
 		  case AppStates.SurveyError
 		    
+		    me.Title = "ocrJob - Survey Error"
 		    SetColorTheme(ColorERROR)
 		    
 		    EnableParamsUI(True)
@@ -2222,6 +2224,7 @@ End
 		    
 		  case AppStates.SurveyNoDocs
 		    
+		    me.Title = "ocrJob - No Docs"
 		    SetColorTheme(ColorDONEWARNINGS)
 		    
 		    EnableParamsUI(True)
@@ -2244,6 +2247,7 @@ End
 		    
 		  case AppStates.SurveyOK
 		    
+		    me.Title = "ocrJob - Survey Done"
 		    SetColorTheme(ColorDONEOK)
 		    
 		    EnableParamsUI(False)
@@ -2266,6 +2270,7 @@ End
 		    
 		  case AppStates.OCRInProgress
 		    
+		    me.Title = "ocrJob - OCR"
 		    SetColorTheme(ColorWORKING)
 		    
 		    EnableParamsUI(False)
@@ -2290,6 +2295,7 @@ End
 		    
 		  case AppStates.OCRFatalError
 		    
+		    me.Title = "ocrJob - OCR Error"
 		    SetColorTheme(ColorERROR)
 		    
 		    EnableParamsUI(False)
@@ -2321,6 +2327,7 @@ End
 		    
 		  case AppStates.OCROK
 		    
+		    me.Title = "ocrJob - OCR Done"
 		    SetColorTheme(ColorDONEOK)
 		    
 		    EnableParamsUI(False)
@@ -2341,11 +2348,15 @@ End
 		    Timer.CallLater(500 , AddressOf HideProgressBar)
 		    
 		    
+		  case AppStates.NoChange
+		    // this is used to update footer message, panel index and the like
+		    
 		  end Select
 		  
 		  if not FooterMsg.IsEmpty then FooterLabel.Text = FooterMsg
+		  if PanelIndex > -1 then MainTabPanel.SelectedPanelIndex = PanelIndex
 		  
-		  AppState = targetAppState
+		  if targetAppState <> AppStates.NoChange then AppState = targetAppState
 		  
 		  
 		End Sub
@@ -2363,19 +2374,16 @@ End
 		  
 		  if ActiveJob.Stats.DocsTotal = 0 then
 		    
-		    SetMode(AppStates.SurveyNoDocs)
-		    MainTabPanel.SelectedPanelIndex = 0
-		    FooterLabel.Text = "Survey OK : No documents found!"
+		    SetMode(AppStates.SurveyNoDocs , "Survey OK : No documents found!" , 0)
+		    
 		    
 		  else
 		    
-		    SetMode(AppStates.SurveyOK)
-		    MainTabPanel.SelectedPanelIndex = 1
-		    FooterLabel.Text = "Survey OK : " + ActiveJob.Stats.DocsTotal.ToString + " Documents in " + ActiveJob.Stats.FoldersTotal.ToString + " Subfolders. Total page count is " + ActiveJob.Stats.PagesTotal.ToString
+		    SetMode(AppStates.SurveyOK , "Survey OK : " + ActiveJob.Stats.DocsTotal.ToString + " Documents in " + ActiveJob.Stats.FoldersTotal.ToString + " Subfolders. Total page count is " + ActiveJob.Stats.PagesTotal.ToString , 1)
 		    BuildDocList
 		    
 		    if AutoStartOCRCheck.Value = true then
-		      timer.CallLater(1000 , AddressOf OCRStart)
+		      timer.CallLater(500 , AddressOf OCRStart)
 		    end if
 		    
 		  end if
@@ -2386,11 +2394,8 @@ End
 	#tag Method, Flags = &h0
 		Sub SurveyKilled()
 		  
-		  SetMode(AppStates.SurveyError)
+		  SetMode(AppStates.SurveyError , "Survey cancelled by user!" , 0)
 		  
-		  MainTabPanel.SelectedPanelIndex = 0
-		  
-		  FooterLabel.Text = "Survey cancelled by user!"
 		  
 		  
 		  
@@ -2455,6 +2460,21 @@ End
 	#tag EndProperty
 
 
+	#tag Constant, Name = ColorDONEOK, Type = Color, Dynamic = False, Default = \"&c00A800", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = ColorDONEWARNINGS, Type = Color, Dynamic = False, Default = \"&cFF8040", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = ColorERROR, Type = Color, Dynamic = False, Default = \"&cFF0000", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = ColorSETUP, Type = Color, Dynamic = False, Default = \"&c0080C0", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = ColorWORKING, Type = Color, Dynamic = False, Default = \"&c808000", Scope = Public
+	#tag EndConstant
+
 	#tag Constant, Name = FooterDefaultMsg, Type = String, Dynamic = False, Default = \"ocrJob - an ocrmypdf coordinator for batch document processing", Scope = Public
 	#tag EndConstant
 
@@ -2468,7 +2488,8 @@ End
 		  OCRInProgress
 		  OCRFatalError
 		  OCROK
-		OCRWarnings
+		  OCRWarnings
+		NoChange
 	#tag EndEnum
 
 
@@ -2869,9 +2890,9 @@ End
 #tag Events ClearSurveyBtn
 	#tag Event
 		Sub Pressed()
-		  SetMode(AppStates.Setup)
+		  SetMode(AppStates.Setup , "" , 0)
 		  
-		  MainTabPanel.SelectedPanelIndex = 0
+		  
 		  
 		  
 		End Sub
