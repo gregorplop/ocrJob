@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   2
+      Value           =   0
       Visible         =   True
       Width           =   860
       Begin DesktopListBox DocList
@@ -1669,6 +1669,39 @@ Begin DesktopWindow MainWindow
          Visible         =   True
          Width           =   120
       End
+      Begin DesktopLabel LogFolderLabel
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   510
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   2
+         Selectable      =   False
+         TabIndex        =   36
+         TabPanelIndex   =   1
+         TabStop         =   True
+         Text            =   "Log Folder"
+         TextAlignment   =   0
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   511
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   350
+      End
    End
    Begin DesktopRectangle HeaderRect
       AllowAutoDeactivate=   True
@@ -1846,6 +1879,7 @@ End
 	#tag Event
 		Sub Opening()
 		  SetMode(AppStates.Setup , "" , 3)
+		  
 		  
 		End Sub
 	#tag EndEvent
@@ -2142,6 +2176,7 @@ End
 		  end  
 		  
 		  
+		  
 		  WorkShell.ExecuteMode = shell.ExecuteModes.Asynchronous // init workshell
 		  
 		  KillOCRFlag = false
@@ -2151,6 +2186,7 @@ End
 		  ConsoleView.AddText "=================================================" + EndOfLine
 		  ConsoleView.AddText "New OCR job started on " + ActiveJob.Stats.JobStartTimestamp.SQLDateTime + EndOfLine
 		  ConsoleView.AddText "Base folder = " + ActiveJob.Conf.BaseFolder.NativePath + EndOfLine
+		  ConsoleView.AddText ActiveJob.Stats.JobStampID + " : " + FooterLabel.Text.NthField(":" , 2) + EndOfLine
 		  ConsoleView.AddText "=================================================" + EndOfLine
 		  ConsoleView.AddText EndOfLine
 		  
@@ -2236,6 +2272,8 @@ End
 		    
 		    MainProgressBar.Visible = false
 		    
+		    LogFolderLabel.Text = if(IsNull(app.LogFolder) , "" , app.LogFolder.NativePath)
+		    LogFolderLabel.Enabled = True
 		    
 		  case AppStates.SurveyInProgress
 		    
@@ -2928,6 +2966,21 @@ End
 		  
 		End Sub
 	#tag EndEvent
+	#tag Event
+		Sub Opening()
+		  if app.CmdLineArgs.HasKey("rotate") then
+		    
+		    dim threshold as Integer = app.CmdLineArgs.Value("rotate").IntegerValue
+		    
+		    if threshold > 0 then
+		      me.Value = true
+		      RotateThresholdValue.Text = threshold.ToString
+		    end if
+		    
+		  end if
+		  
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events RotateThresholdUpDown
 	#tag Event
@@ -3002,15 +3055,39 @@ End
 #tag Events LoggingPolicyMenu
 	#tag Event
 		Sub Opening()
-		  me.AddRow "None - Just job progress table"
+		  me.AddRow "None - Save logs manually"
 		  me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.NoLog
+		  
+		  me.SelectedRowIndex = 0
+		  
+		  if App.CmdLineArgs.HasKey("logfolder") and not IsNull(App.LogFolder) then
+		    me.AddRow "Autosave Progress and Console to log folder"
+		    me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder
+		    me.SelectedRowIndex = 1
+		  end if
+		  
 		  
 		  //me.AddRow "Log file in each folder containing PDFs"
 		  //me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.LogFileInFolders
 		  
 		  
-		  me.SelectedRowIndex = 0
 		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub SelectionChanged(item As DesktopMenuItem)
+		  select case item.Tag
+		    
+		  case ocrJob.LoggingPolicies.NoLog
+		    LogFolderLabel.Visible = false
+		    
+		  case ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder
+		    LogFolderLabel.Visible = true
+		    
+		  case ocrJob.LoggingPolicies.LogFileInFolders
+		    LogFolderLabel.Visible = false
+		    
+		  end select
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -3084,6 +3161,20 @@ End
 		    end If
 		    
 		  end if
+		  
+		  
+		  
+		  if ActiveJob.Conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
+		    if AppState = AppStates.OCRFatalError or AppState = AppStates.OCROK or AppState = AppStates.OCRWarnings then
+		      dim ErrorMsg as String
+		      dim logfilename as String = ActiveJob.Stats.JobStampID
+		      
+		      if not ExportDocList(app.LogFolder.Child(logfilename + ".csv") , ErrorMsg) then MessageBox ErrorMsg
+		      if not SaveConsoleOutput(app.LogFolder.Child(logfilename + ".txt") , ErrorMsg) then MessageBox ErrorMsg
+		      
+		    end if
+		  end if
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

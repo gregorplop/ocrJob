@@ -35,8 +35,8 @@ Protected Class Job
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Sub BuildCommandArguments(folderidx as integer)
+	#tag Method, Flags = &h0
+		Sub BuildCommandArguments(folderidx as integer)
 		  // this method parses the last document item for the folderidx folder
 		  
 		  // for keeping code cleaner

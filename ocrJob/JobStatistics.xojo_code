@@ -1,5 +1,20 @@
 #tag Class
 Protected Class JobStatistics
+	#tag Method, Flags = &h0
+		Function JobStampID() As string
+		  if IsNull(JobStartTimestamp) then
+		    Return "NOSTAMP" + DateTime.Now.SecondsFrom1970.ToString
+		    
+		  else
+		    
+		    Return JobStartTimestamp.SQLDateTime.ReplaceAll("-" , "").ReplaceAll(" " , "").ReplaceAll(":" , "")
+		    
+		  end if
+		  
+		End Function
+	#tag EndMethod
+
+
 	#tag Property, Flags = &h0
 		DocsFailed As Integer = 0
 	#tag EndProperty
@@ -82,7 +97,7 @@ Protected Class JobStatistics
 			Name="DocsTotal"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
@@ -90,7 +105,7 @@ Protected Class JobStatistics
 			Name="DocsProcessed"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
@@ -98,7 +113,7 @@ Protected Class JobStatistics
 			Name="DocsFailed"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
@@ -106,7 +121,7 @@ Protected Class JobStatistics
 			Name="DocsSkippedOCR"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
@@ -114,7 +129,7 @@ Protected Class JobStatistics
 			Name="PagesTotal"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
@@ -122,7 +137,15 @@ Protected Class JobStatistics
 			Name="FoldersTotal"
 			Visible=false
 			Group="Behavior"
-			InitialValue=""
+			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="DocsProcessedWithWarnings"
+			Visible=false
+			Group="Behavior"
+			InitialValue="0"
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty

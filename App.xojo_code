@@ -1,6 +1,54 @@
 #tag Class
 Protected Class App
 Inherits DesktopApplication
+	#tag Event
+		Sub Opening()
+		  App.CmdLineArgs = BuildCmdLineArgs(System.CommandLine)
+		  
+		  if App.CmdLineArgs.HasKey("logfolder") then
+		    LogFolder = new FolderItem(App.CmdLineArgs.Value("logfolder").StringValue)
+		    if IsNull(LogFolder) then
+		      MessageBox "Log folder """ + App.CmdLineArgs.Value("logfolder").StringValue + """ is invalid!"
+		    else
+		      if not LogFolder.Exists then
+		        MessageBox "Log folder """ + App.CmdLineArgs.Value("logfolder").StringValue + """ does not exist!"
+		        LogFolder = nil
+		      end if
+		    end if
+		  end if
+		  
+		  
+		End Sub
+	#tag EndEvent
+
+
+	#tag Method, Flags = &h0
+		Function BuildCmdLineArgs(CmdLineArgs as string) As Dictionary
+		  dim args() as String = CmdLineArgs.Split("--")
+		  dim argsDict as new Dictionary
+		  
+		  args.RemoveAt(0) // remove executable path
+		  
+		  for i as Integer = 0 to args.LastIndex
+		    argsDict.Value(args(i).NthField("=" , 1).Lowercase.Trim) = args(i).NthField("=" , 2).Trim
+		  next i
+		  
+		  Return argsDict
+		  
+		  
+		End Function
+	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		CmdLineArgs As Dictionary
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		LogFolder As FolderItem
+	#tag EndProperty
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Name"

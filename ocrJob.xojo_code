@@ -349,7 +349,8 @@ Protected Module ocrJob
 
 	#tag Enum, Name = LoggingPolicies, Type = Integer, Flags = &h0
 		NoLog
-		LogFileInFolders
+		  LogFileInFolders
+		AutosaveProgressAndConsoleToLogFolder
 	#tag EndEnum
 
 	#tag Enum, Name = OutputFilenameAppendumPolicies, Type = Integer, Flags = &h0

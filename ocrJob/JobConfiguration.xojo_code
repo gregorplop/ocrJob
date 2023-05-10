@@ -264,6 +264,7 @@ Protected Class JobConfiguration
 			#tag EnumValues
 				"0 - NoLog"
 				"1 - LogFileInFolders"
+				"2 - AutosaveProgressAndConsoleToLogFolder"
 			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
