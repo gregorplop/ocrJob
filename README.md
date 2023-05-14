@@ -1,6 +1,9 @@
 # ocrJob
 #### An ocrmypdf front-end / batch job designer. Currently supported for Windows.
 
+# BUG WARNING: Releases 1.x.x have been retracted! Due to a bug, the last document of a Job does not undergo OCR! 
+A fix for this issue is being implemented in version 2.0.0. In the meantime, do not use an older version!
+
 ## A GUI application for:
 + Automatically surveying a folder tree, looking for PDF documents
 + Configuring a set of basic parameters for ocrmypdf/Tesseract
