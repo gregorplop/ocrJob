@@ -16,23 +16,27 @@ Protected Class JobStatistics
 
 
 	#tag Property, Flags = &h0
-		DocsFailed As Integer = 0
+		DocsCancelled As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		DocsProcessed As Integer = 0
+		DocsErrors As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		DocsProcessedWithWarnings As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		DocsSkippedOCR As Integer = 0
+		DocsFlawless As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		DocsTotal As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		DocsUnreliable As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		DocsValid As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -102,7 +106,7 @@ Protected Class JobStatistics
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="DocsProcessed"
+			Name="DocsValid"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"
@@ -110,7 +114,7 @@ Protected Class JobStatistics
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="DocsFailed"
+			Name="DocsFlawless"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"
@@ -118,7 +122,7 @@ Protected Class JobStatistics
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="DocsSkippedOCR"
+			Name="DocsUnreliable"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"
@@ -142,7 +146,7 @@ Protected Class JobStatistics
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="DocsProcessedWithWarnings"
+			Name="DocsErrors"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

@@ -36,12 +36,12 @@ Protected Class Job
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub BuildCommandArguments(folderidx as integer)
+		Sub BuildCommandArguments(folderidx as integer, docidx as integer)
 		  // this method parses the last document item for the folderidx folder
 		  
 		  // for keeping code cleaner
 		  dim args as String = ""
-		  dim doc as ocrJob.JobDocument = Folders(folderidx).Documents(Folders(folderidx).Documents.LastIndex)
+		  dim doc as ocrJob.JobDocument = Folders(folderidx).Documents(docidx)
 		  
 		  args = "--language " + Conf.language + " "
 		  
@@ -130,7 +130,13 @@ Protected Class Job
 		Sub Constructor(initConf as ocrJob.JobConfiguration)
 		  Conf = initConf
 		  
+		  if IsNull(Conf) Then
+		    State = ocrJob.JobStates.Uninitialized
+		  else
+		    State = ocrJob.JobStates.Configured
+		  end if
 		  
+		  Redim CreatedFiles(-1)
 		  
 		End Sub
 	#tag EndMethod
@@ -150,23 +156,58 @@ Protected Class Job
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub FinalizeDocument(ProcessedDoc as ocrJob.JobDocument, Outcome as Integer)
-		  ProcessedDoc.ExitCode = Outcome
+		Sub FinalizeDocument(ProcessedDoc as ocrJob.JobDocument, ExitCode as Integer)
 		  ProcessedDoc.OCREndTimestamp = DateTime.Now
 		  
+		  select case ExitCode
+		    
+		  case 0
+		    Stats.DocsFlawless = Stats.DocsFlawless + 1
+		  case 6
+		    Stats.DocsValid = Stats.DocsValid + 1
+		  case 10
+		    Stats.DocsUnreliable = Stats.DocsUnreliable + 1
+		  case 2 , 3 , 4 , 5 , 7 , 8 , 9 , 15 , 130 , -4 , -99
+		    Stats.DocsErrors = Stats.DocsErrors + 1
+		  case -3
+		    stats.DocsCancelled = Stats.DocsCancelled + 1
+		    
+		  else
+		    raise new RuntimeException("Internal error: Unexpected document state: " + ExitCode.ToString , 666)
+		    
+		  end Select
+		  
+		  ProcessedDoc.State = ocrJob.DocumentStates(ExitCode)
+		  
+		  
+		  
 		  // created file list for cleanup on job cancel
-		  if not IsNull(ProcessedDoc.OutputDocFile) then
-		    if ProcessedDoc.InputDocFile.NativePath <> ProcessedDoc.OutputDocFile.NativePath then
-		      CreatedFiles.Add ProcessedDoc.OutputDocFile
+		  if ExitCode <> Integer(ocrJob.DocumentStates.Cancelled) then
+		    
+		    if not IsNull(ProcessedDoc.OutputDocFile) then
+		      if ProcessedDoc.InputDocFile.NativePath <> ProcessedDoc.OutputDocFile.NativePath then
+		        CreatedFiles.Add ProcessedDoc.OutputDocFile
+		      end if
 		    end if
+		    
+		    if not IsNull(ProcessedDoc.TextFile) then
+		      CreatedFiles.Add ProcessedDoc.TextFile
+		    end if
+		    
 		  end if
 		  
-		  if not IsNull(ProcessedDoc.TextFile) then
-		    CreatedFiles.Add ProcessedDoc.TextFile
-		  end if
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub FinalizeJob()
+		  if Stats.DocsCancelled > 0 then State = ocrJob.JobStates.Done_Cancelled
+		  if Stats.DocsErrors > 0 then State = ocrJob.JobStates.Done_Errors
+		  if Stats.DocsUnreliable > 0 then State = ocrJob.JobStates.Done_Unreliable
+		  if Stats.DocsValid > 0 then State = ocrJob.JobStates.Done_Valid
 		  
+		  if Stats.DocsFlawless = stats.DocsTotal then State = ocrJob.JobStates.Done_Flawless
 		  
-		  // update stats here
 		  
 		End Sub
 	#tag EndMethod
@@ -185,18 +226,48 @@ Protected Class Job
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function GetCursorsAtListIndex(ListIndex as Integer) As pair
+		  for i as Integer = 0 to Folders.LastIndex
+		    for j as Integer = 0 to Folders(i).Documents.LastIndex
+		      if ListIndex = Folders(i).Documents(j).ListIndex then Return new Pair(i , j)
+		    next j
+		  next i
+		  
+		  Return new Pair(-1 , -1)
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetDuration4Display() As string
 		  Return Duration4Display(Stats.JobEndTimestamp , Stats.JobStartTimestamp)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function GetJobState() As ocrJob.JobStates
+		  Return State
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetNextDocument() As ocrJob.JobDocument
-		  // technically, it gets the current document and increments cursor afterwards
+		  // technically, it gets the current document and increments cursors afterwards
+		  // if EOJ , it returns nil
+		  
 		  try
 		    
 		    dim currentDoc as ocrJob.JobDocument
 		    currentDoc = Folders(FolderCursor).Documents(DocumentCursor)
+		    
+		    if State = ocrJob.JobStates.CancelRequested then 
+		      currentDoc.State = ocrJob.DocumentStates.Cancelled // signify cancel, external app has to honor it
+		    else // we go on as planned
+		      currentDoc.State = ocrJob.DocumentStates.InProgress
+		      currentDoc.OCRStartTimestamp = DateTime.Now // ocr is (probably) about to start right after
+		    end if
 		    
 		    // now increment the cursors appropriately so the next document is avaliable upon request
 		    if DocumentCursor < Folders(FolderCursor).Documents.LastIndex then
@@ -209,13 +280,13 @@ Protected Class Job
 		      
 		    end if
 		    
-		    currentDoc.OCRStartTimestamp = DateTime.Now // ocr is (probably) about to start right after
 		    
 		    Return currentDoc
 		    
 		  Catch e as OutOfBoundsException // the end of the job
 		    
 		    Stats.JobEndTimestamp = DateTime.Now
+		    
 		    Return nil
 		    
 		  end try
@@ -275,15 +346,50 @@ Protected Class Job
 		    // this ought to be the document list row index
 		    Folders(folderidx).Documents(Folders(folderidx).Documents.LastIndex).ListIndex = Stats.DocsTotal - 1
 		    
+		    //set all documents to Pending
+		    Folders(folderidx).Documents(Folders(folderidx).Documents.LastIndex).State = ocrJob.DocumentStates.Pending
+		    
+		    
 		    // now build the command line for processing this document, according to the loaded configuration
 		    
-		    BuildCommandArguments(folderidx)
+		    BuildCommandArguments(folderidx , Folders(folderidx).Documents.LastIndex)
 		    
 		    
 		  next i
 		  
 		  FolderCursor = 0
 		  DocumentCursor = 0
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RequestCancel() As integer
+		  KillFlag = true
+		  State = ocrJob.JobStates.CancelRequested
+		  
+		  dim DocIndexAtCancel as Integer = -1
+		  
+		  dim doc as ocrJob.JobDocument = GetNextDocument
+		  DocIndexAtCancel = if(IsNull(doc) , -1 , doc.ListIndex)
+		  
+		  // cancel all pending documents
+		  while not IsNull(doc)
+		    FinalizeDocument(doc , Integer(ocrJob.DocumentStates.Cancelled))
+		    doc = GetNextDocument
+		  wend
+		  
+		  Return DocIndexAtCancel
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Start()
+		  KillFlag = false
+		  Stats.JobStartTimestamp = DateTime.Now
+		  FolderCursor = 0
+		  DocumentCursor = 0
+		  State = ocrJob.JobStates.Running
 		  
 		End Sub
 	#tag EndMethod
@@ -309,8 +415,12 @@ Protected Class Job
 		Folders() As ocrJob.JobFolder
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		Killed As Boolean = false
+	#tag Property, Flags = &h21
+		Private KillFlag As Boolean
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private State As ocrJob.JobStates = ocrJob.JobStates.Uninitialized
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -357,14 +467,6 @@ Protected Class Job
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Killed"
-			Visible=false
-			Group="Behavior"
-			InitialValue="false"
-			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior

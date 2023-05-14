@@ -12,6 +12,51 @@ Protected Module ocrJob
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function DocState2Description(DocState as ocrJob.DocumentStates) As string
+		  select case DocState
+		    
+		  case ocrJob.DocumentStates.ocrJobError
+		    Return "ocrJob Error"
+		  case ocrJob.DocumentStates.Cancelled
+		    Return "Cancelled"
+		  case ocrJob.DocumentStates.InProgress
+		    return "In Progress"
+		  case ocrJob.DocumentStates.Pending
+		    return "Pending"
+		  case ocrJob.DocumentStates.ExitCode_OK
+		    return "OK"
+		  case ocrJob.DocumentStates.ExitCode_BadArgs
+		    Return "Invalid args"
+		  case ocrJob.DocumentStates.ExitCode_InputFile
+		    Return "Invalid PDF"
+		  case ocrJob.DocumentStates.ExitCode_MissingDependency
+		    Return "Missing dependency"
+		  case ocrJob.DocumentStates.ExitCode_InvalidOutputPDF
+		    Return "Invalid PDF output"
+		  case ocrJob.DocumentStates.ExitCode_FileAccessError
+		    Return "Permission error"
+		  case ocrJob.DocumentStates.ExitCode_AlreadyDoneOCR
+		    Return "Already OCR'd"
+		  case ocrJob.DocumentStates.ExitCode_ChildProcessError
+		    Return "Child process error"
+		  case ocrJob.DocumentStates.ExitCode_EncryptedPDF
+		    Return "Encrypted PDF"
+		  case ocrJob.DocumentStates.ExitCode_InvalidConfigTesseract
+		    Return "Invalid Tesseract conf"
+		  case ocrJob.DocumentStates.ExitCode_PDFAConversionFailed
+		    Return "PDF/A convert error"
+		  case ocrJob.DocumentStates.ExitCode_OtherError
+		    Return "Other error"
+		  case ocrJob.DocumentStates.ExitCode_CtrlC
+		    Return "Interrupted"
+		  else
+		    Return "Unknown error"
+		  end select
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function Duration4Display(startStamp as DateTime, endStamp as DateTime) As string
 		  if IsNull(endStamp) or IsNull(startStamp) then Return "N/A"
@@ -104,49 +149,6 @@ Protected Module ocrJob
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ocrmypdfExitCodeDescription(exitcode as Integer) As string
-		  select case exitcode
-		    
-		  case -3
-		    Return "ocrJob Error"
-		  case -2
-		    return "ocrJob Cancel"
-		  case -1
-		    return "Pending"
-		  case 0
-		    return "OK"
-		  case 1
-		    Return "Invalid args"
-		  case 2
-		    Return "Invalid PDF"
-		  case 3
-		    Return "Missing dependency"
-		  case 4
-		    Return "Invalid PDF output"
-		  case 5
-		    Return "Permission error"
-		  case 6
-		    Return "Already OCR'd"
-		  case 7
-		    Return "Child process error"
-		  case 8
-		    Return "Encrypted PDF"
-		  case 9
-		    Return "Invalid Tesseract conf"
-		  case 10
-		    Return "PDF/A convert error"
-		  case 15
-		    Return "Other error"
-		  case 130
-		    Return "Interrupted"
-		  else
-		    Return "Unknown error"
-		  end select
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function ocrmypdfHelp() As string
 		  dim s as new Shell
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
@@ -200,7 +202,7 @@ Protected Module ocrJob
 		Function pdfinfo_pages(extends pdfinfo_result as string) As integer
 		  dim lines() as String = pdfinfo_result.Split(EndOfLine.Native)
 		  
-		  dim pagecount as Integer = -1
+		  dim pagecount as Integer = 0
 		  
 		  for i as Integer = 0 to lines.LastIndex
 		    
@@ -346,24 +348,92 @@ Protected Module ocrJob
 		
 	#tag EndNote
 
+	#tag Note, Name = States
+		Document Level:
+		
+		-99                                  Unknown
+		-4                                   ocrJob Error
+		-3                                   Cancelled
+		-2                                   In Progress
+		-1                                   Pending
+		
+		0   ExitCode.ok                      Everything worked as expected.
+		1   ExitCode.bad_args                Invalid arguments, exited with an error.
+		2   ExitCode.input_file              The input file does not seem to be a valid PDF.
+		3   ExitCode.missing_dependency      An external program required by OCRmyPDF is missing.
+		4   ExitCode.invalid_output_pdf      An output file was created, but it does not seem to be a valid PDF. The file will be available.
+		5   ExitCode.file_access_error       The user running OCRmyPDF does not have sufficient permissions to read the input file and write the output file.
+		6   ExitCode.already_done_ocr        The file already appears to contain text so it may not need OCR. See output message.
+		7   ExitCode.child_process_error     An error occurred in an external program (child process) and OCRmyPDF cannot continue.
+		8   ExitCode.encrypted_pdf           The input PDF is encrypted. OCRmyPDF does not read encrypted PDFs. Use another program such as qpdf to remove encryption.
+		9   ExitCode.invalid_config          A custom configuration file was forwarded to Tesseract using --tesseract-config, and Tesseract rejected this file.
+		10  ExitCode.pdfa_conversion_failed  A valid PDF was created, PDF/A conversion failed. The file will be available.
+		15  ExitCode.other_error             Some other error occurred.
+		130 ExitCode.ctrl_c                  The program was interrupted by pressing Ctrl+C.
+		
+		
+		
+		
+		Job outcomes:
+		
+		Flawless     <- all 0
+		Valid        <- all 0 or 6
+		Unreliable   <- at least one 10
+		Errors       <- at least one 2,3,4,5,7,8,9,15,130 or -2
+		Cancelled    <- at least one -3
+	#tag EndNote
 
-	#tag Enum, Name = LoggingPolicies, Type = Integer, Flags = &h0
+
+	#tag Enum, Name = DocumentStates, Type = Integer, Flags = &h1
+		Unknown = -99
+		  ocrJobError = -4
+		  Cancelled = -3
+		  InProgress = -2
+		  Pending = -1
+		  ExitCode_OK = 0
+		  ExitCode_BadArgs = 1
+		  ExitCode_InputFile = 2
+		  ExitCode_MissingDependency = 3
+		  ExitCode_InvalidOutputPDF = 4
+		  ExitCode_FileAccessError = 5
+		  ExitCode_AlreadyDoneOCR = 6
+		  ExitCode_ChildProcessError = 7
+		  ExitCode_EncryptedPDF = 8
+		  ExitCode_InvalidConfigTesseract = 9
+		  ExitCode_PDFAConversionFailed = 10
+		  ExitCode_OtherError = 15
+		ExitCode_CtrlC = 130
+	#tag EndEnum
+
+	#tag Enum, Name = JobStates, Type = Integer, Flags = &h1
+		Uninitialized
+		  Configured
+		  Running
+		  CancelRequested
+		  Done_Flawless
+		  Done_Valid
+		  Done_Unreliable
+		  Done_Errors
+		Done_Cancelled
+	#tag EndEnum
+
+	#tag Enum, Name = LoggingPolicies, Type = Integer, Flags = &h1
 		NoLog
 		  LogFileInFolders
 		AutosaveProgressAndConsoleToLogFolder
 	#tag EndEnum
 
-	#tag Enum, Name = OutputFilenameAppendumPolicies, Type = Integer, Flags = &h0
+	#tag Enum, Name = OutputFilenameAppendumPolicies, Type = Integer, Flags = &h1
 		Suffix
 		Prefix
 	#tag EndEnum
 
-	#tag Enum, Name = OutputFilePolicies, Type = Integer, Flags = &h0
+	#tag Enum, Name = OutputFilePolicies, Type = Integer, Flags = &h1
 		Overwrite
 		CreateFile
 	#tag EndEnum
 
-	#tag Enum, Name = SidecarFilenamePolicies, Type = Integer, Flags = &h0
+	#tag Enum, Name = SidecarFilenamePolicies, Type = Integer, Flags = &h1
 		SameAsSource
 		SameAsTarget
 	#tag EndEnum

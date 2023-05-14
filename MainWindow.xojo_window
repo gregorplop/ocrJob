@@ -10,7 +10,7 @@ Begin DesktopWindow MainWindow
    HasFullScreenButton=   False
    HasMaximizeButton=   False
    HasMinimizeButton=   True
-   Height          =   730
+   Height          =   734
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -31,7 +31,7 @@ Begin DesktopWindow MainWindow
       FontName        =   "System"
       FontSize        =   16.0
       FontUnit        =   0
-      Height          =   609
+      Height          =   613
       Index           =   -2147483648
       Italic          =   False
       Left            =   20
@@ -77,7 +77,7 @@ Begin DesktopWindow MainWindow
          HasHorizontalScrollbar=   True
          HasVerticalScrollbar=   True
          HeadingIndex    =   -1
-         Height          =   467
+         Height          =   471
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          InitialValue    =   ""
@@ -119,7 +119,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   504
+         Height          =   508
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -548,7 +548,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   False
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   499
+         Height          =   503
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -972,7 +972,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1013,7 +1013,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          ValidationMask  =   ""
@@ -1260,7 +1260,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   False
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   499
+         Height          =   503
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -1447,7 +1447,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   2
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1479,7 +1479,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   1
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1631,7 +1631,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   2
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1663,7 +1663,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   646
+         Top             =   650
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1811,7 +1811,7 @@ Begin DesktopWindow MainWindow
       TabIndex        =   2
       TabPanelIndex   =   0
       Tooltip         =   ""
-      Top             =   703
+      Top             =   707
       Transparent     =   False
       Visible         =   True
       Width           =   900
@@ -1842,7 +1842,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &cFFFFFF00
          Tooltip         =   ""
-         Top             =   705
+         Top             =   709
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1896,7 +1896,7 @@ End
 		      ListRow(0) = integer(DocList.RowCount + 1).ToString
 		      ListRow(1) = ActiveJob.Folders(i).Documents(j).InputDocFile.Name
 		      ListRow(2) = ActiveJob.Folders(i).Documents(j).Pages.ToString
-		      ListRow(3) = ocrJob.ocrmypdfExitCodeDescription(ActiveJob.Folders(i).Documents(j).ExitCode)
+		      ListRow(3) = ocrJob.DocState2Description(ActiveJob.Folders(i).Documents(j).State)
 		      ListRow(4) = ActiveJob.Folders(i).Documents(j).GetDuration4Display
 		      ListRow(5) = ActiveJob.Folders(i).JobFolderitem.NativePath
 		      ListRow(6) = if(isnull(ActiveJob.Folders(i).Documents(j).OutputDocFile) , "" , ActiveJob.Folders(i).Documents(j).OutputDocFile.Name) 
@@ -1906,7 +1906,7 @@ End
 		      DocList.AddRow ListRow
 		      
 		      DocList.CellTagAt(DocList.LastRowIndex , 1) = ActiveJob.Folders(i).Documents(j).InputDocFile
-		      DocList.CellTagAt(DocList.LastRowIndex , 3) = ActiveJob.Folders(i).Documents(j).ExitCode
+		      DocList.CellTagAt(DocList.LastRowIndex , 3) = ActiveJob.Folders(i).Documents(j).State
 		      DocList.CellTagAt(DocList.LastRowIndex , 5) = ActiveJob.Folders(i).JobFolderitem
 		      DocList.CellTagAt(DocList.LastRowIndex , 6) = ActiveJob.Folders(i).Documents(j).OutputDocFile
 		      DocList.CellTagAt(DocList.LastRowIndex , 7) = ActiveJob.Folders(i).Documents(j).TextFile
@@ -2010,13 +2010,31 @@ End
 
 	#tag Method, Flags = &h0
 		Sub DocListUpdate(doc as ocrJob.JobDocument)
-		  DocList.CellTextAt(CurrentDoc.ListIndex , 3) = ocrJob.ocrmypdfExitCodeDescription(CurrentDoc.ExitCode)
-		  DocList.CellTagAt(CurrentDoc.ListIndex , 3) = CurrentDoc.ExitCode
+		  DocList.CellTextAt(doc.ListIndex , 3) = ocrJob.DocState2Description(doc.State)
+		  DocList.CellTagAt(doc.ListIndex , 3) = doc.State
 		  
-		  DocList.CellTextAt(CurrentDoc.ListIndex , 4) = CurrentDoc.GetDuration4Display
-		  DocList.CellTagAt(CurrentDoc.ListIndex, 4) = CurrentDoc.OCREndTimestamp.SecondsFrom1970 - CurrentDoc.OCRStartTimestamp.SecondsFrom1970
+		  DocList.CellTextAt(doc.ListIndex , 4) = doc.GetDuration4Display
 		  
 		  
+		  
+		  //System.DebugLog(doc.ListIndex.ToString + " : " + doc.GetDuration4Display)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DocListUpdateCancelled(CancelAtIndex as Integer)
+		  dim coords as pair
+		  dim doc as ocrJob.JobDocument
+		  
+		  for i as Integer = CancelAtIndex to DocList.LastRowIndex
+		    
+		    coords = ActiveJob.GetCursorsAtListIndex(i)
+		    doc = ActiveJob.Folders(coords.Left.IntegerValue).Documents(coords.Right.IntegerValue)
+		    
+		    DocListUpdate(doc)
+		    
+		  next i
 		  
 		End Sub
 	#tag EndMethod
@@ -2134,7 +2152,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function OCRNextDocument(jobDoc as ocrJob.JobDocument) As Boolean
+		Function OCRNextDocument(byref jobDoc as ocrJob.JobDocument) As Boolean
 		  // returns end-of-job (EOJ)
 		  MainProgressBar.Value = MainProgressBar.Value + 1
 		  
@@ -2143,6 +2161,7 @@ End
 		  if IsNull(jobDoc) then Return true
 		  
 		  DocList.SelectedRowIndex = jobDoc.ListIndex
+		  DocListUpdate(jobDoc)
 		  
 		  ConsoleView.AddText "Document start at " + jobDoc.OCRStartTimestamp.SQLDateTime + EndOfLine
 		  ConsoleView.AddText "Input file : " + jobDoc.InputDocFile.NativePath + EndOfLine
@@ -2152,7 +2171,7 @@ End
 		  ConsoleView.AddText "> ocrmypdf " + jobDoc.CmdLineParams + EndOfLine
 		  ConsoleView.AddText EndOfLine
 		  
-		  CurrentDoc = jobDoc
+		  
 		  WorkShell.Execute("ocrmypdf " + jobDoc.CmdLineParams)
 		  
 		  Return false
@@ -2175,12 +2194,11 @@ End
 		    Return
 		  end  
 		  
-		  
+		  // dependencies appear OK
 		  
 		  WorkShell.ExecuteMode = shell.ExecuteModes.Asynchronous // init workshell
 		  
-		  KillOCRFlag = false
-		  ActiveJob.Stats.JobStartTimestamp = DateTime.Now
+		  ActiveJob.Start // just resets timestamps, counters, state, etc
 		  
 		  ConsoleView.Text = ""
 		  ConsoleView.AddText "=================================================" + EndOfLine
@@ -2245,9 +2263,13 @@ End
 
 	#tag Method, Flags = &h0
 		Sub SetMode(targetAppState as AppStates, optional FooterMsg as string, optional PanelIndex as integer = -1)
+		  if targetAppState = AppState then Return // do not run if target is the same as current
+		  
 		  select case targetAppState
 		    
 		  case AppStates.Setup
+		    
+		    ActiveJob = nil
 		    
 		    me.Title = "ocrJob - Setup"
 		    SetColorTheme(ColorSETUP)
@@ -2275,6 +2297,8 @@ End
 		    LogFolderLabel.Text = if(IsNull(app.LogFolder) , "" , app.LogFolder.NativePath)
 		    LogFolderLabel.Enabled = True
 		    
+		    SaveConsoleBtn.Enabled = False
+		    
 		  case AppStates.SurveyInProgress
 		    
 		    me.Title = "ocrJob - Survey"
@@ -2300,6 +2324,7 @@ End
 		    MainProgressBar.Visible = true
 		    MainProgressBar.Indeterminate = true
 		    
+		    SaveConsoleBtn.Enabled = False
 		    
 		  case AppStates.SurveyError
 		    
@@ -2323,6 +2348,7 @@ End
 		    
 		    MainProgressBar.Visible = False
 		    
+		    SaveConsoleBtn.Enabled = False
 		    
 		  case AppStates.SurveyNoDocs
 		    
@@ -2346,6 +2372,7 @@ End
 		    
 		    MainProgressBar.Visible = False
 		    
+		    SaveConsoleBtn.Enabled = False
 		    
 		  case AppStates.SurveyOK
 		    
@@ -2368,7 +2395,7 @@ End
 		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
 		    
 		    MainProgressBar.Visible = False
-		    
+		    SaveConsoleBtn.Enabled = False
 		    
 		  case AppStates.OCRInProgress
 		    
@@ -2395,6 +2422,8 @@ End
 		    MainProgressBar.MaximumValue = DocList.RowCount
 		    MainProgressBar.Value = 0
 		    
+		    SaveConsoleBtn.Enabled = False
+		    
 		  case AppStates.OCRFatalError
 		    
 		    me.Title = "ocrJob - OCR Error"
@@ -2419,12 +2448,33 @@ End
 		    
 		    MainProgressBar.Visible = False
 		    
+		    SaveConsoleBtn.Enabled = true
 		    
 		  case appstates.OCRWarnings
 		    
+		    me.Title = "ocrJob - OCR Warnings"
+		    SetColorTheme(ColorDONEWARNINGS)
 		    
+		    EnableParamsUI(False)
 		    
+		    FooterLabel.Text = "OCR with Warnings"
+		    SurveyProgressWheel.Visible = False
 		    
+		    QuitBtn.Enabled = True
+		    SurveyStartCancelBtn.Enabled = False
+		    SurveyStartCancelBtn.Caption = "Survey Now!"
+		    
+		    CancelJobBtn.Enabled = False
+		    CancelJobBtn.Caption = "Cancel Job"
+		    
+		    StartJobBtn.Enabled = false
+		    ClearSurveyBtn.Enabled = true
+		    ExportDocListBtn.Enabled = true
+		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
+		    
+		    MainProgressBar.Visible = False
+		    
+		    SaveConsoleBtn.Enabled = true
 		    
 		    
 		  case AppStates.OCROK
@@ -2447,6 +2497,8 @@ End
 		    ExportDocListBtn.Enabled = true
 		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
 		    
+		    SaveConsoleBtn.Enabled = true
+		    
 		    Timer.CallLater(500 , AddressOf HideProgressBar)
 		    
 		    
@@ -2465,9 +2517,39 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub SetModeBasedOnJobState(JobState as ocrJob.JobStates, optional FooterMsg as string, optional PanelIndex as integer = -1)
+		  // meant to be used when the job has finished somehow
+		  
+		  select case JobState
+		    
+		  case ocrJob.JobStates.Done_Flawless
+		    
+		    
+		  case ocrJob.JobStates.Done_Valid
+		    
+		    
+		  case ocrJob.JobStates.Done_Unreliable
+		    
+		    
+		  case ocrJob.JobStates.Done_Errors
+		    
+		    
+		  case ocrJob.JobStates.Done_Cancelled
+		    
+		    
+		  else
+		    
+		    MessageBox "Cannot set app state for an unfinished job state!"
+		    
+		  end select
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub SurveyCancel()
 		  KillSurveyFlag = true
-		  
 		End Sub
 	#tag EndMethod
 
@@ -2510,7 +2592,7 @@ End
 		  
 		  ActiveJob = new ocrJob.Job(CreateConf(ErrorMsg))
 		  
-		  if IsNull(ActiveJob.Conf) then 
+		  if ActiveJob.GetJobState = ocrJob.JobStates.Uninitialized then 
 		    SetMode(AppStates.SurveyError)
 		    FooterLabel.Text = ErrorMsg
 		    MessageBox ErrorMsg
@@ -2546,7 +2628,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		AppState As AppStates
+		AppState As AppStates = AppStates.NoChange
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -2554,11 +2636,11 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		KillOCRFlag As Boolean
+		DocIndexAtCancel As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		KillSurveyFlag As Boolean
+		KillSurveyFlag As Boolean = False
 	#tag EndProperty
 
 
@@ -2642,7 +2724,7 @@ End
 		  case 3
 		    
 		    if me.CellTextAt(row , column).IsNumeric then
-		      me.CellTextAt(row , column) = ocrJob.ocrmypdfExitCodeDescription(me.CellTagAt(row , column).IntegerValue)
+		      me.CellTextAt(row , column) = ocrJob.DocState2Description(ocrJob.DocumentStates(me.CellTagAt(row , column).IntegerValue))
 		    else
 		      me.CellTextAt(row , column) = me.CellTagAt(row , column).StringValue
 		    end if
@@ -3026,7 +3108,8 @@ End
 #tag Events CancelJobBtn
 	#tag Event
 		Sub Pressed()
-		  KillOCRFlag = true
+		  DocIndexAtCancel = ActiveJob.RequestCancel // request kill , it will be honored in the next document.
+		  
 		  me.Caption = "Cancelling..."
 		  
 		End Sub
@@ -3035,7 +3118,7 @@ End
 #tag Events ExportDocListBtn
 	#tag Event
 		Sub Pressed()
-		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , "joblist.csv")
+		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , ActiveJob.Stats.JobStampID + ".csv")
 		  dim ErrorMsg as String
 		  
 		  if not ExportDocList(f , ErrorMsg) then
@@ -3094,7 +3177,7 @@ End
 #tag Events BuildBatchFileCmd
 	#tag Event
 		Sub Pressed()
-		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , "ocrjob.cmd")
+		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , ActiveJob.Stats.JobStampID +".cmd")
 		  dim ErrorMsg as String
 		  
 		  if not ActiveJob.BuildBatchFile(f , ErrorMsg) then
@@ -3107,7 +3190,7 @@ End
 #tag Events SaveConsoleBtn
 	#tag Event
 		Sub Pressed()
-		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , "console.txt")
+		  dim f as FolderItem = FolderItem.ShowSaveFileDialog("" , ActiveJob.Stats.JobStampID + ".txt")
 		  dim ErrorMsg as String
 		  
 		  if not SaveConsoleOutput(f , ErrorMsg) then
@@ -3138,12 +3221,15 @@ End
 		  ActiveJob.FinalizeDocument(CurrentDoc , me.ExitCode)
 		  DocListUpdate(CurrentDoc)
 		  
-		  if KillOCRFlag then // job killed
+		  if ActiveJob.GetJobState = ocrJob.JobStates.CancelRequested then // job killed
 		    
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    ConsoleView.AddText "Killed ocrmypdf job!" + EndOfLine
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    
+		    DocListUpdateCancelled(DocIndexAtCancel)
+		    
+		    ActiveJob.FinalizeJob
 		    SetMode(AppStates.OCRFatalError , "OCR Job cancelled by user")
 		    
 		  else  // go on until EOJ
@@ -3154,7 +3240,9 @@ End
 		    
 		    
 		    dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // re-start the async processing -or not, if EOJ
+		    
 		    if EOJ then 
+		      ActiveJob.FinalizeJob
 		      SetMode(AppStates.OCROK , "Job complete, duration " + ActiveJob.GetDuration4Display)
 		      ConsoleView.AddText "Job complete, duration " + ActiveJob.GetDuration4Display + EndOfLine + EndOfLine
 		      //todo: display stats
@@ -3461,22 +3549,6 @@ End
 			"8 - OCRWarnings"
 			"9 - NoChange"
 		#tag EndEnumValues
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="KillSurveyFlag"
-		Visible=false
-		Group="Behavior"
-		InitialValue=""
-		Type="Boolean"
-		EditorType=""
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="KillOCRFlag"
-		Visible=false
-		Group="Behavior"
-		InitialValue=""
-		Type="Boolean"
-		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="AllDependenciesOK"
