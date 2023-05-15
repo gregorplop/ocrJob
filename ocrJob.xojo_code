@@ -129,6 +129,36 @@ Protected Module ocrJob
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function JobState2Description(JobState as ocrJob.JobStates) As string
+		  select case JobState
+		    
+		  case ocrJob.JobStates.CancelRequested
+		    Return "Cancel Requested"
+		  case ocrJob.JobStates.Configured
+		    Return "Configured"
+		  case ocrJob.JobStates.Done_Cancelled
+		    Return "Finished/Cancelled"
+		  case ocrJob.JobStates.Done_Errors
+		    Return "Finished/With Errors"
+		  case ocrJob.JobStates.Done_Flawless
+		    Return "Finished/Flawless"
+		  case ocrJob.JobStates.Done_Unreliable
+		    Return "Finished/Unreliable"
+		  case ocrJob.JobStates.Done_Valid
+		    Return "Finished/Valid"
+		  case ocrJob.JobStates.Running
+		    Return "Running"
+		  case ocrJob.JobStates.Uninitialized
+		    Return "Uninitialized"
+		    
+		  else
+		    Return "Undefined!"
+		  end select
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Function NameWithoutExtension(extends f as FolderItem) As String
 		  dim filename() as String = f.Name.Split(".")
@@ -379,8 +409,8 @@ Protected Module ocrJob
 		Flawless     <- all 0
 		Valid        <- all 0 or 6
 		Unreliable   <- at least one 10
-		Errors       <- at least one 2,3,4,5,7,8,9,15,130 or -2
-		Cancelled    <- at least one -3
+		Errors       <- at least one 2,3,4,5,7,8,9,15 or -2
+		Cancelled    <- at least one -3 , 130
 	#tag EndNote
 
 

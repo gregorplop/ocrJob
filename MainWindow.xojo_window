@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   0
+      Value           =   2
       Visible         =   True
       Width           =   860
       Begin DesktopListBox DocList
@@ -106,14 +106,14 @@ Begin DesktopWindow MainWindow
       Begin DesktopTextArea ConsoleView
          AllowAutoDeactivate=   True
          AllowFocusRing  =   True
-         AllowSpellChecking=   True
+         AllowSpellChecking=   False
          AllowStyledText =   True
          AllowTabs       =   False
-         BackgroundColor =   &cFFFFD700
+         BackgroundColor =   &c46464600
          Bold            =   False
          Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   14.0
+         FontName        =   "Consolas"
+         FontSize        =   16.0
          FontUnit        =   0
          Format          =   ""
          HasBorder       =   True
@@ -141,7 +141,7 @@ Begin DesktopWindow MainWindow
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   0
-         TextColor       =   &c000000
+         TextColor       =   &c00FF0000
          Tooltip         =   ""
          Top             =   130
          Transparent     =   False
@@ -2524,22 +2524,28 @@ End
 		    
 		  case ocrJob.JobStates.Done_Flawless
 		    
+		    SetMode(AppStates.OCROK , FooterMsg , PanelIndex)
 		    
 		  case ocrJob.JobStates.Done_Valid
 		    
+		    SetMode(AppStates.OCRWarnings , FooterMsg , PanelIndex)
 		    
 		  case ocrJob.JobStates.Done_Unreliable
 		    
+		    SetMode(AppStates.OCRWarnings , FooterMsg , PanelIndex)
 		    
 		  case ocrJob.JobStates.Done_Errors
 		    
+		    SetMode(AppStates.OCRFatalError , FooterMsg , PanelIndex)
 		    
 		  case ocrJob.JobStates.Done_Cancelled
 		    
+		    SetMode(AppStates.OCRFatalError , FooterMsg , PanelIndex)
 		    
-		  else
+		  else // this shouldn't happen
 		    
 		    MessageBox "Cannot set app state for an unfinished job state!"
+		    SetMode(AppStates.OCRFatalError , "internal error!") 
 		    
 		  end select
 		  
@@ -3223,14 +3229,11 @@ End
 		  
 		  if ActiveJob.GetJobState = ocrJob.JobStates.CancelRequested then // job killed
 		    
-		    ConsoleView.AddText "============================================" + EndOfLine
-		    ConsoleView.AddText "Killed ocrmypdf job!" + EndOfLine
-		    ConsoleView.AddText "============================================" + EndOfLine
-		    
+		    ActiveJob.FinalizeJob
 		    DocListUpdateCancelled(DocIndexAtCancel)
 		    
-		    ActiveJob.FinalizeJob
-		    SetMode(AppStates.OCRFatalError , "OCR Job cancelled by user")
+		    ConsoleView.AddText ActiveJob.CompileTextReport + EndOfLine
+		    SetModeBasedOnJobState(ActiveJob.GetJobState , "OCR Job cancelled by user")
 		    
 		  else  // go on until EOJ
 		    
@@ -3238,14 +3241,15 @@ End
 		    ConsoleView.AddText "============================================" + EndOfLine
 		    ConsoleView.AddText EndOfLine
 		    
-		    
 		    dim EOJ as Boolean = OCRNextDocument(CurrentDoc) // re-start the async processing -or not, if EOJ
 		    
 		    if EOJ then 
+		      
 		      ActiveJob.FinalizeJob
-		      SetMode(AppStates.OCROK , "Job complete, duration " + ActiveJob.GetDuration4Display)
-		      ConsoleView.AddText "Job complete, duration " + ActiveJob.GetDuration4Display + EndOfLine + EndOfLine
-		      //todo: display stats
+		      
+		      ConsoleView.AddText ActiveJob.CompileTextReport + EndOfLine
+		      SetModeBasedOnJobState(ActiveJob.GetJobState , ocrJob.JobState2Description(ActiveJob.GetJobState) + " -> Job duration " + ActiveJob.GetDuration4Display)
+		      
 		    end If
 		    
 		  end if
@@ -3534,7 +3538,7 @@ End
 		Name="AppState"
 		Visible=false
 		Group="Behavior"
-		InitialValue=""
+		InitialValue="AppStates.NoChange"
 		Type="AppStates"
 		EditorType="Enum"
 		#tag EnumValues
@@ -3555,6 +3559,22 @@ End
 		Visible=false
 		Group="Behavior"
 		InitialValue=""
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="DocIndexAtCancel"
+		Visible=false
+		Group="Behavior"
+		InitialValue=""
+		Type="Integer"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="KillSurveyFlag"
+		Visible=false
+		Group="Behavior"
+		InitialValue="False"
 		Type="Boolean"
 		EditorType=""
 	#tag EndViewProperty

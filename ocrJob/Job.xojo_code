@@ -127,6 +127,30 @@ Protected Class Job
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function CompileTextReport() As string
+		  dim reportlines(-1) as string
+		  dim horzsep as String = chr(9)
+		  
+		  reportlines.Add "Job: " + Stats.JobStampID + horzsep + "Status: " + JobState2Description(State)
+		  reportlines.Add "Base folder: " + conf.BaseFolder.NativePath + horzsep + "PDF Folders: " + Integer(Folders.LastIndex + 1).ToString
+		  reportlines.Add "Documents: " + Stats.DocsTotal.ToString + horzsep + "Pages: " + Stats.PagesTotal.ToString
+		  reportlines.Add "Started at: " + stats.JobStartTimestamp.SQLDateTime + horzsep + "Finished at: " + stats.JobEndTimestamp.SQLDateTime + horzsep + "Duration: " + ocrJob.Duration4Display(stats.JobStartTimestamp , stats.JobEndTimestamp)
+		  reportlines.add ""
+		  reportlines.add "Documents breakdown: "
+		  reportlines.Add "Flawless   (code 0)                        = " + stats.DocsFlawless.ToString
+		  reportlines.add "Valid      (code 6)                        = " + stats.DocsValid.ToString
+		  reportlines.add "Unreliable (code 10)                       = " + stats.DocsUnreliable.ToString
+		  reportlines.Add "Errors     (codes 2,3,4,5,7,8,9,15,-4,-99) = " + stats.DocsErrors.ToString
+		  reportlines.Add "Cancelled  (codes 130 , -3)                = " + stats.DocsCancelled.ToString
+		  reportlines.Add "------------------------------------------"
+		  reportlines.Add "Total                                      = " + stats.DocsTotal.ToString
+		  
+		  Return String.FromArray(reportlines , EndOfLine.Native)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Constructor(initConf as ocrJob.JobConfiguration)
 		  Conf = initConf
 		  
@@ -167,9 +191,9 @@ Protected Class Job
 		    Stats.DocsValid = Stats.DocsValid + 1
 		  case 10
 		    Stats.DocsUnreliable = Stats.DocsUnreliable + 1
-		  case 2 , 3 , 4 , 5 , 7 , 8 , 9 , 15 , 130 , -4 , -99
+		  case 2 , 3 , 4 , 5 , 7 , 8 , 9 , 15 , -4 , -99
 		    Stats.DocsErrors = Stats.DocsErrors + 1
-		  case -3
+		  case -3 , 130
 		    stats.DocsCancelled = Stats.DocsCancelled + 1
 		    
 		  else
@@ -201,12 +225,27 @@ Protected Class Job
 
 	#tag Method, Flags = &h0
 		Sub FinalizeJob()
-		  if Stats.DocsCancelled > 0 then State = ocrJob.JobStates.Done_Cancelled
-		  if Stats.DocsErrors > 0 then State = ocrJob.JobStates.Done_Errors
-		  if Stats.DocsUnreliable > 0 then State = ocrJob.JobStates.Done_Unreliable
-		  if Stats.DocsValid > 0 then State = ocrJob.JobStates.Done_Valid
-		  
-		  if Stats.DocsFlawless = stats.DocsTotal then State = ocrJob.JobStates.Done_Flawless
+		  if Stats.DocsCancelled > 0 then 
+		    State = ocrJob.JobStates.Done_Cancelled
+		    
+		  elseif Stats.DocsErrors > 0 then 
+		    State = ocrJob.JobStates.Done_Errors
+		    
+		  elseif Stats.DocsUnreliable > 0 then 
+		    State = ocrJob.JobStates.Done_Unreliable
+		    
+		  elseif Stats.DocsValid > 0 then 
+		    State = ocrJob.JobStates.Done_Valid
+		    
+		  elseif Stats.DocsFlawless = stats.DocsTotal then 
+		    State = ocrJob.JobStates.Done_Flawless
+		    
+		    
+		  else
+		    
+		    state = ocrJob.JobStates.Uninitialized // this shouldn't happen:signify internal error
+		    
+		  end if
 		  
 		  
 		End Sub
