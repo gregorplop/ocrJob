@@ -131,19 +131,20 @@ Protected Class Job
 		  dim reportlines(-1) as string
 		  dim horzsep as String = chr(9)
 		  
+		  reportlines.Add ""
 		  reportlines.Add "Job: " + Stats.JobStampID + horzsep + "Status: " + JobState2Description(State)
 		  reportlines.Add "Base folder: " + conf.BaseFolder.NativePath + horzsep + "PDF Folders: " + Integer(Folders.LastIndex + 1).ToString
 		  reportlines.Add "Documents: " + Stats.DocsTotal.ToString + horzsep + "Pages: " + Stats.PagesTotal.ToString
 		  reportlines.Add "Started at: " + stats.JobStartTimestamp.SQLDateTime + horzsep + "Finished at: " + stats.JobEndTimestamp.SQLDateTime + horzsep + "Duration: " + ocrJob.Duration4Display(stats.JobStartTimestamp , stats.JobEndTimestamp)
 		  reportlines.add ""
 		  reportlines.add "Documents breakdown: "
-		  reportlines.Add "Flawless   (code 0)                        = " + stats.DocsFlawless.ToString
-		  reportlines.add "Valid      (code 6)                        = " + stats.DocsValid.ToString
-		  reportlines.add "Unreliable (code 10)                       = " + stats.DocsUnreliable.ToString
-		  reportlines.Add "Errors     (codes 2,3,4,5,7,8,9,15,-4,-99) = " + stats.DocsErrors.ToString
-		  reportlines.Add "Cancelled  (codes 130 , -3)                = " + stats.DocsCancelled.ToString
+		  reportlines.Add "Flawless      (code 0)                        = " + stats.DocsFlawless.ToString
+		  reportlines.add "Already OCR'd (code 6)                        = " + stats.DocsAlreadyOCR.ToString
+		  reportlines.add "Unreliable    (code 10)                       = " + stats.DocsUnreliable.ToString
+		  reportlines.Add "Errors        (codes 2,3,4,5,7,8,9,15,-4,-99) = " + stats.DocsErrors.ToString
+		  reportlines.Add "Cancelled     (codes 130 , -3)                = " + stats.DocsCancelled.ToString
 		  reportlines.Add "------------------------------------------"
-		  reportlines.Add "Total                                      = " + stats.DocsTotal.ToString
+		  reportlines.Add "Total                                         = " + stats.DocsTotal.ToString
 		  
 		  Return String.FromArray(reportlines , EndOfLine.Native)
 		  
@@ -188,7 +189,7 @@ Protected Class Job
 		  case 0
 		    Stats.DocsFlawless = Stats.DocsFlawless + 1
 		  case 6
-		    Stats.DocsValid = Stats.DocsValid + 1
+		    Stats.DocsAlreadyOCR = Stats.DocsAlreadyOCR + 1
 		  case 10
 		    Stats.DocsUnreliable = Stats.DocsUnreliable + 1
 		  case 2 , 3 , 4 , 5 , 7 , 8 , 9 , 15 , -4 , -99
@@ -234,8 +235,8 @@ Protected Class Job
 		  elseif Stats.DocsUnreliable > 0 then 
 		    State = ocrJob.JobStates.Done_Unreliable
 		    
-		  elseif Stats.DocsValid > 0 then 
-		    State = ocrJob.JobStates.Done_Valid
+		  elseif Stats.DocsAlreadyOCR > 0 then 
+		    State = ocrJob.JobStates.Done_AlreadyOCR
 		    
 		  elseif Stats.DocsFlawless = stats.DocsTotal then 
 		    State = ocrJob.JobStates.Done_Flawless

@@ -145,8 +145,8 @@ Protected Module ocrJob
 		    Return "Finished/Flawless"
 		  case ocrJob.JobStates.Done_Unreliable
 		    Return "Finished/Unreliable"
-		  case ocrJob.JobStates.Done_Valid
-		    Return "Finished/Valid"
+		  case ocrJob.JobStates.Done_AlreadyOCR
+		    Return "Finished/Already OCR'd"
 		  case ocrJob.JobStates.Running
 		    Return "Running"
 		  case ocrJob.JobStates.Uninitialized
@@ -407,7 +407,7 @@ Protected Module ocrJob
 		Job outcomes:
 		
 		Flawless     <- all 0
-		Valid        <- all 0 or 6
+		Already OCR  <- all 0 or 6
 		Unreliable   <- at least one 10
 		Errors       <- at least one 2,3,4,5,7,8,9,15 or -2
 		Cancelled    <- at least one -3 , 130
@@ -436,15 +436,15 @@ Protected Module ocrJob
 	#tag EndEnum
 
 	#tag Enum, Name = JobStates, Type = Integer, Flags = &h1
-		Uninitialized
+		Done_Flawless = 0
+		  Done_AlreadyOCR = 1
+		  Done_Unreliable = 2
+		  Done_Cancelled = 3
+		  Done_Errors = 4
+		  Uninitialized
 		  Configured
 		  Running
-		  CancelRequested
-		  Done_Flawless
-		  Done_Valid
-		  Done_Unreliable
-		  Done_Errors
-		Done_Cancelled
+		CancelRequested
 	#tag EndEnum
 
 	#tag Enum, Name = LoggingPolicies, Type = Integer, Flags = &h1

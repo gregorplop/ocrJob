@@ -16,6 +16,10 @@ Protected Class JobStatistics
 
 
 	#tag Property, Flags = &h0
+		DocsAlreadyOCR As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		DocsCancelled As Integer
 	#tag EndProperty
 
@@ -33,10 +37,6 @@ Protected Class JobStatistics
 
 	#tag Property, Flags = &h0
 		DocsUnreliable As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		DocsValid As Integer = 0
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -106,7 +106,7 @@ Protected Class JobStatistics
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="DocsValid"
+			Name="DocsAlreadyOCR"
 			Visible=false
 			Group="Behavior"
 			InitialValue="0"

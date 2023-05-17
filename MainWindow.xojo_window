@@ -23,7 +23,7 @@ Begin DesktopWindow MainWindow
    Title           =   "ocrJob"
    Type            =   0
    Visible         =   True
-   Width           =   900
+   Width           =   1000
    Begin DesktopTabPanel MainTabPanel
       AllowAutoDeactivate=   True
       Bold            =   False
@@ -51,9 +51,9 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   2
+      Value           =   0
       Visible         =   True
-      Width           =   860
+      Width           =   960
       Begin DesktopListBox DocList
          AllowAutoDeactivate=   True
          AllowAutoHideScrollbars=   True
@@ -99,7 +99,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   820
+         Width           =   920
          _ScrollOffset   =   0
          _ScrollWidth    =   -1
       End
@@ -149,7 +149,7 @@ Begin DesktopWindow MainWindow
          UnicodeMode     =   1
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   820
+         Width           =   920
       End
       Begin DesktopLabel AboutHeaderLabel
          AllowAutoDeactivate=   True
@@ -182,7 +182,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   820
+         Width           =   920
       End
       Begin DesktopLabel InputLabel
          AllowAutoDeactivate=   True
@@ -257,7 +257,7 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   250
+         Width           =   350
       End
       Begin DesktopLabel OutputLabel
          AllowAutoDeactivate=   True
@@ -372,7 +372,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   447
+         Left            =   547
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -402,7 +402,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   510
+         Left            =   610
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -435,7 +435,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   679
+         Left            =   779
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -578,7 +578,7 @@ Begin DesktopWindow MainWindow
          UnicodeMode     =   1
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   820
+         Width           =   920
       End
       Begin DesktopLabel LoggingLabel
          AllowAutoDeactivate=   True
@@ -644,7 +644,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   350
+         Width           =   450
       End
       Begin DesktopPopupMenu OCRFilePolicyList
          AllowAutoDeactivate=   True
@@ -1018,7 +1018,7 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   608
+         Width           =   708
       End
       Begin DesktopPopupMenu OptimizationMenu
          AllowAutoDeactivate=   True
@@ -1290,7 +1290,7 @@ Begin DesktopWindow MainWindow
          UnicodeMode     =   1
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   820
+         Width           =   920
       End
       Begin DesktopLabel LicenseHeader
          AllowAutoDeactivate=   True
@@ -1323,7 +1323,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   820
+         Width           =   920
       End
       Begin DesktopButton ClearSurveyBtn
          AllowAutoDeactivate=   True
@@ -1435,7 +1435,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   740
+         Left            =   840
          LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
@@ -1467,7 +1467,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   812
+         Left            =   912
          LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
@@ -1523,7 +1523,7 @@ Begin DesktopWindow MainWindow
          Height          =   16
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
-         Left            =   848
+         Left            =   948
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -1568,7 +1568,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Value           =   0.0
          Visible         =   False
-         Width           =   484
+         Width           =   584
          _mIndex         =   0
          _mInitialParent =   ""
          _mName          =   ""
@@ -1586,7 +1586,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   679
+         Left            =   779
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -1619,7 +1619,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   608
+         Left            =   708
          LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
@@ -1651,7 +1651,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   740
+         Left            =   840
          LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   False
@@ -1700,7 +1700,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   350
+         Width           =   450
       End
    End
    Begin DesktopRectangle HeaderRect
@@ -1725,7 +1725,7 @@ Begin DesktopWindow MainWindow
       Top             =   0
       Transparent     =   False
       Visible         =   True
-      Width           =   900
+      Width           =   1000
       Begin DesktopLabel HeaderLabel
          AllowAutoDeactivate=   True
          Bold            =   False
@@ -1757,7 +1757,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   778
+         Width           =   878
       End
       Begin DesktopButton QuitBtn
          AllowAutoDeactivate=   True
@@ -1773,7 +1773,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "HeaderRect"
          Italic          =   False
-         Left            =   810
+         Left            =   910
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -1814,7 +1814,7 @@ Begin DesktopWindow MainWindow
       Top             =   707
       Transparent     =   False
       Visible         =   True
-      Width           =   900
+      Width           =   1000
       Begin DesktopLabel FooterLabel
          AllowAutoDeactivate=   True
          Bold            =   False
@@ -1832,7 +1832,7 @@ Begin DesktopWindow MainWindow
          LockLeft        =   True
          LockRight       =   True
          LockTop         =   False
-         Multiline       =   False
+         Multiline       =   True
          Scope           =   2
          Selectable      =   False
          TabIndex        =   0
@@ -1846,7 +1846,7 @@ Begin DesktopWindow MainWindow
          Transparent     =   False
          Underline       =   False
          Visible         =   True
-         Width           =   860
+         Width           =   960
       End
    End
    Begin Shell WorkShell
@@ -2144,6 +2144,12 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub GoToConsoleDoc(ListIndex as Integer)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub HideProgressBar()
 		  // for delayed progress bar hide
 		  MainProgressBar.Visible = False
@@ -2163,7 +2169,7 @@ End
 		  DocList.SelectedRowIndex = jobDoc.ListIndex
 		  DocListUpdate(jobDoc)
 		  
-		  ConsoleView.AddText "Document start at " + jobDoc.OCRStartTimestamp.SQLDateTime + EndOfLine
+		  ConsoleView.AddText "Document #" + integer(jobDoc.ListIndex + 1).ToString + " start at " + jobDoc.OCRStartTimestamp.SQLDateTime + EndOfLine
 		  ConsoleView.AddText "Input file : " + jobDoc.InputDocFile.NativePath + EndOfLine
 		  ConsoleView.AddText if(IsNull(jobDoc.OutputDocFile) , "No output pdf" , "Output file : " + jobDoc.OutputDocFile.NativePath) + EndOfLine
 		  ConsoleView.AddText if(IsNull(jobDoc.TextFile) , "No text file output" , "Text file : " + jobDoc.TextFile.NativePath) + EndOfLine
@@ -2526,7 +2532,7 @@ End
 		    
 		    SetMode(AppStates.OCROK , FooterMsg , PanelIndex)
 		    
-		  case ocrJob.JobStates.Done_Valid
+		  case ocrJob.JobStates.Done_AlreadyOCR
 		    
 		    SetMode(AppStates.OCRWarnings , FooterMsg , PanelIndex)
 		    
@@ -2733,6 +2739,18 @@ End
 		      me.CellTextAt(row , column) = ocrJob.DocState2Description(ocrJob.DocumentStates(me.CellTagAt(row , column).IntegerValue))
 		    else
 		      me.CellTextAt(row , column) = me.CellTagAt(row , column).StringValue
+		    end if
+		    
+		    
+		  case 0
+		    
+		    dim uniquestr as String = "Document #" + me.CellTextAt(row , column) + " "
+		    dim charidx as Integer = ConsoleView.Text.IndexOf(0 , uniquestr)
+		    if charidx > -1 then 
+		      ConsoleView.VerticalScrollPosition = ConsoleView.LineNumber(charidx)
+		      ConsoleView.SelectionStart = charidx
+		      ConsoleView.SelectionLength = uniquestr.Length - 1
+		      MainTabPanel.SelectedPanelIndex = 2
 		    end if
 		    
 		  end Select
@@ -3117,6 +3135,7 @@ End
 		  DocIndexAtCancel = ActiveJob.RequestCancel // request kill , it will be honored in the next document.
 		  
 		  me.Caption = "Cancelling..."
+		  me.Enabled = false
 		  
 		End Sub
 	#tag EndEvent
@@ -3218,7 +3237,10 @@ End
 #tag Events WorkShell
 	#tag Event
 		Sub DataAvailable()
-		  ConsoleView.AddText me.ReadAll
+		  dim buffer as String = me.ReadAll
+		  
+		  ConsoleView.AddText buffer
+		  FooterLabel.Text = buffer
 		  
 		End Sub
 	#tag EndEvent
@@ -3256,16 +3278,18 @@ End
 		  
 		  
 		  
-		  if ActiveJob.Conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
-		    if AppState = AppStates.OCRFatalError or AppState = AppStates.OCROK or AppState = AppStates.OCRWarnings then
+		  
+		  if AppState = AppStates.OCRFatalError or AppState = AppStates.OCROK or AppState = AppStates.OCRWarnings then // if job finishes:
+		    
+		    if ActiveJob.Conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
 		      dim ErrorMsg as String
 		      dim logfilename as String = ActiveJob.Stats.JobStampID
-		      
 		      if not ExportDocList(app.LogFolder.Child(logfilename + ".csv") , ErrorMsg) then MessageBox ErrorMsg
 		      if not SaveConsoleOutput(app.LogFolder.Child(logfilename + ".txt") , ErrorMsg) then MessageBox ErrorMsg
-		      
 		    end if
+		    
 		  end if
+		  
 		  
 		End Sub
 	#tag EndEvent
