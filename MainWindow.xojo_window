@@ -43,7 +43,7 @@ Begin DesktopWindow MainWindow
       Panels          =   ""
       Scope           =   2
       SmallTabs       =   False
-      TabDefinition   =   "Job Parameters\rJob Progress\rocrmypdf Console\rAbout\rLicense"
+      TabDefinition   =   "Job Parameters\rWorkflow Integration\rJob Progress\rocrmypdf Console\rAbout\rLicense"
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   0
+      Value           =   1
       Visible         =   True
       Width           =   960
       Begin DesktopListBox DocList
@@ -92,7 +92,7 @@ Begin DesktopWindow MainWindow
          RowSelectionType=   0
          Scope           =   2
          TabIndex        =   0
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   167
@@ -137,7 +137,7 @@ Begin DesktopWindow MainWindow
          ReadOnly        =   False
          Scope           =   2
          TabIndex        =   0
-         TabPanelIndex   =   3
+         TabPanelIndex   =   4
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   0
@@ -172,7 +172,7 @@ Begin DesktopWindow MainWindow
          Scope           =   2
          Selectable      =   False
          TabIndex        =   0
-         TabPanelIndex   =   4
+         TabPanelIndex   =   5
          TabStop         =   True
          Text            =   "ocrJob - Batch OCR jobs with ocrmypdf / Tesseract"
          TextAlignment   =   2
@@ -566,7 +566,7 @@ Begin DesktopWindow MainWindow
          ReadOnly        =   True
          Scope           =   2
          TabIndex        =   1
-         TabPanelIndex   =   4
+         TabPanelIndex   =   5
          TabStop         =   True
          Text            =   ""
          TextAlignment   =   2
@@ -1278,7 +1278,7 @@ Begin DesktopWindow MainWindow
          ReadOnly        =   True
          Scope           =   2
          TabIndex        =   0
-         TabPanelIndex   =   5
+         TabPanelIndex   =   6
          TabStop         =   True
          Text            =   "Copyright (c) 2023 Georgios Poulopoulos\r\n\r\nPermission is hereby granted, free of charge, to any person obtaining a copy\r\nof this software and associated documentation files (the ""Software""), to deal\r\nin the Software without restriction, including without limitation the rights\r\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\r\ncopies of the Software, and to permit persons to whom the Software is\r\nfurnished to do so, subject to the following conditions:\r\n\r\nThe above copyright notice and this permission notice shall be included in all\r\ncopies or substantial portions of the Software.\r\n\r\nTHE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\r\nSOFTWARE."
          TextAlignment   =   1
@@ -1313,7 +1313,7 @@ Begin DesktopWindow MainWindow
          Scope           =   2
          Selectable      =   False
          TabIndex        =   1
-         TabPanelIndex   =   5
+         TabPanelIndex   =   6
          TabStop         =   True
          Text            =   "MIT LICENSE"
          TextAlignment   =   1
@@ -1348,7 +1348,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   1
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   130
@@ -1380,7 +1380,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   2
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   130
@@ -1412,7 +1412,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   3
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   "Cancelling the job automatically deletes any newly created files. If you opted for overwriting original files, they are not reverted to their initial contents."
          Top             =   130
@@ -1444,7 +1444,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   4
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   650
@@ -1562,7 +1562,7 @@ Begin DesktopWindow MainWindow
          PanelIndex      =   0
          Scope           =   2
          TabIndex        =   5
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          Tooltip         =   ""
          Top             =   130
          Transparent     =   False
@@ -1628,7 +1628,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   6
-         TabPanelIndex   =   2
+         TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
          Top             =   650
@@ -1660,7 +1660,7 @@ Begin DesktopWindow MainWindow
          MacButtonStyle  =   0
          Scope           =   2
          TabIndex        =   1
-         TabPanelIndex   =   3
+         TabPanelIndex   =   4
          TabStop         =   True
          Tooltip         =   ""
          Top             =   650
@@ -1701,6 +1701,185 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          Visible         =   True
          Width           =   450
+      End
+      Begin DesktopCheckBox LaunchAppOnJobCompleteCheck
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Caption         =   "Launch application on Job complete"
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   40
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         Scope           =   2
+         TabIndex        =   0
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   134
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         VisualState     =   0
+         Width           =   264
+      End
+      Begin DesktopTextField NextAppField
+         AllowAutoDeactivate=   True
+         AllowFocusRing  =   True
+         AllowSpellChecking=   False
+         AllowTabs       =   False
+         BackgroundColor =   &cFFFFFF
+         Bold            =   False
+         Enabled         =   False
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Format          =   ""
+         HasBorder       =   True
+         Height          =   25
+         Hint            =   "Application executable path"
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   316
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         MaximumCharactersAllowed=   0
+         Password        =   False
+         ReadOnly        =   False
+         Scope           =   2
+         TabIndex        =   1
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Text            =   ""
+         TextAlignment   =   0
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   134
+         Transparent     =   False
+         Underline       =   False
+         ValidationMask  =   ""
+         Visible         =   True
+         Width           =   504
+      End
+      Begin DesktopButton NextAppSelectBtn
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Cancel          =   False
+         Caption         =   "Select Executable"
+         Default         =   False
+         Enabled         =   False
+         FontName        =   "System"
+         FontSize        =   0.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   832
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   False
+         LockRight       =   True
+         LockTop         =   True
+         MacButtonStyle  =   0
+         Scope           =   2
+         TabIndex        =   2
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   134
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   128
+      End
+      Begin DesktopTextField NextAppArgsField
+         AllowAutoDeactivate=   True
+         AllowFocusRing  =   True
+         AllowSpellChecking=   False
+         AllowTabs       =   False
+         BackgroundColor =   &cFFFFFF
+         Bold            =   False
+         Enabled         =   False
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Format          =   ""
+         HasBorder       =   True
+         Height          =   25
+         Hint            =   "Application Parameters - Right click to add system variables"
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   316
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         MaximumCharactersAllowed=   0
+         Password        =   False
+         ReadOnly        =   False
+         Scope           =   2
+         TabIndex        =   3
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Text            =   ""
+         TextAlignment   =   0
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   171
+         Transparent     =   False
+         Underline       =   False
+         ValidationMask  =   ""
+         Visible         =   True
+         Width           =   504
+      End
+      Begin DesktopLabel NextAppArgsLabel
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Enabled         =   False
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   832
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   False
+         LockRight       =   True
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   2
+         Selectable      =   False
+         TabIndex        =   4
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Text            =   "App Arguments"
+         TextAlignment   =   1
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   171
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   128
       End
    End
    Begin DesktopRectangle HeaderRect
@@ -1872,13 +2051,21 @@ Begin DesktopWindow MainWindow
       StackSize       =   0
       TabPanelIndex   =   0
    End
+   Begin Timer SurveyTimer
+      Index           =   -2147483648
+      LockedInPosition=   False
+      Period          =   250
+      RunMode         =   0
+      Scope           =   0
+      TabPanelIndex   =   0
+   End
 End
 #tag EndDesktopWindow
 
 #tag WindowCode
 	#tag Event
 		Sub Opening()
-		  SetMode(AppStates.Setup , "" , 3)
+		  SetMode(AppStates.Setup , "" , 4)
 		  
 		  
 		End Sub
@@ -2202,6 +2389,7 @@ End
 		  
 		  // dependencies appear OK
 		  
+		  WorkShell.TimeOut = ocrJob.ShellTimeout
 		  WorkShell.ExecuteMode = shell.ExecuteModes.Asynchronous // init workshell
 		  
 		  ActiveJob.Start // just resets timestamps, counters, state, etc
@@ -2286,7 +2474,7 @@ End
 		    SurveyProgressWheel.Visible = False
 		    
 		    DocList.RemoveAllRows
-		    ConsoleView.Text = ""
+		    ConsoleView.Text = "Shell timeout = " + str(ocrJob.ShellTimeout) + " msec" + EndOfLine + EndOfLine
 		    
 		    QuitBtn.Enabled = True
 		    SurveyStartCancelBtn.Enabled = True
@@ -2326,6 +2514,8 @@ End
 		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
 		    
 		    KillSurveyFlag = false
+		    
+		    LogFolderLabel.Enabled = False
 		    
 		    MainProgressBar.Visible = true
 		    MainProgressBar.Indeterminate = true
@@ -2575,7 +2765,7 @@ End
 		    
 		  else
 		    
-		    SetMode(AppStates.SurveyOK , "Survey OK : " + ActiveJob.Stats.DocsTotal.ToString + " Documents in " + ActiveJob.Stats.FoldersTotal.ToString + " Subfolders. Total page count is " + ActiveJob.Stats.PagesTotal.ToString , 1)
+		    SetMode(AppStates.SurveyOK , "Survey OK : " + ActiveJob.Stats.DocsTotal.ToString + " Documents in " + ActiveJob.Stats.FoldersTotal.ToString + " Subfolders. Total page count is " + ActiveJob.Stats.PagesTotal.ToString , 2)
 		    BuildDocList
 		    
 		    if AutoStartOCRCheck.Value = true then
@@ -2607,8 +2797,9 @@ End
 		  if ActiveJob.GetJobState = ocrJob.JobStates.Uninitialized then 
 		    SetMode(AppStates.SurveyError)
 		    FooterLabel.Text = ErrorMsg
+		    SurveyStartCancelBtn.Enabled = False  // prevent user from starting a new survey while in error mode, shouldn't last for long
 		    MessageBox ErrorMsg
-		    timer.CallLater(3000 , AddressOf UIModeToSetup)
+		    timer.CallLater(2000 , AddressOf UIModeToSetup)
 		    Return
 		  end if
 		  
@@ -2616,6 +2807,8 @@ End
 		  // at this point the job settings appear valid
 		  
 		  SetMode(AppStates.SurveyInProgress)
+		  
+		  SurveyTimer.RunMode = Timer.RunModes.Multiple
 		  
 		  SurveyThread.Start // start survey in the thread!
 		  
@@ -2653,6 +2846,10 @@ End
 
 	#tag Property, Flags = &h0
 		KillSurveyFlag As Boolean = False
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		pdfList() As FolderItem
 	#tag EndProperty
 
 
@@ -2750,7 +2947,7 @@ End
 		      ConsoleView.VerticalScrollPosition = ConsoleView.LineNumber(charidx)
 		      ConsoleView.SelectionStart = charidx
 		      ConsoleView.SelectionLength = uniquestr.Length - 1
-		      MainTabPanel.SelectedPanelIndex = 2
+		      MainTabPanel.SelectedPanelIndex = 3
 		    end if
 		    
 		  end Select
@@ -3225,6 +3422,62 @@ End
 		End Sub
 	#tag EndEvent
 #tag EndEvents
+#tag Events LaunchAppOnJobCompleteCheck
+	#tag Event
+		Sub ValueChanged()
+		  NextAppArgsField.Enabled = me.Value
+		  NextAppArgsLabel.Enabled = me.Value
+		  NextAppField.Enabled = me.Value
+		  NextAppSelectBtn.Enabled = me.Value
+		  
+		  me.Bold = me.Value
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NextAppSelectBtn
+	#tag Event
+		Sub Pressed()
+		  dim dlg As New SelectFolderDialog
+		  dlg.ActionButtonCaption = "Select"
+		  dlg.Title = "Select Base folder for survey"
+		  dlg.PromptText = "The Base folder is where the PDF survey is going to look for documents"
+		  
+		  Var f As FolderItem
+		  
+		  f = dlg.ShowModal
+		  
+		  if not IsNull(f) then BaseFolderField.Text = f.NativePath
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NextAppArgsField
+	#tag Event
+		Function ConstructContextualMenu(base As DesktopMenuItem, x As Integer, y As Integer) As Boolean
+		  base.AddMenu(New DesktopMenuItem("Add Job Exitcode", "$EXITCODE$"))
+		  base.AddMenu(New DesktopMenuItem("Add Job Base folder path" , "$BASEFOLDER$"))
+		  base.AddMenu(New DesktopMenuItem("Add Job Log CSV (if configured)" , "$LOGCSV$"))
+		  
+		  base.MenuAt(2).Enabled = false
+		  
+		  if LoggingPolicyMenu.RowTagAt(LoggingPolicyMenu.SelectedRowIndex) = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
+		    if not IsNull(app.LogFolder) then
+		      if app.LogFolder.Exists then
+		        
+		        base.MenuAt(2).Enabled = true
+		        
+		      end if
+		    end if
+		  end if
+		  
+		  
+		  Return true
+		  
+		End Function
+	#tag EndEvent
+#tag EndEvents
 #tag Events QuitBtn
 	#tag Event
 		Sub Pressed()
@@ -3297,7 +3550,7 @@ End
 #tag Events SurveyThread
 	#tag Event
 		Sub Run()
-		  dim pdfList() as FolderItem
+		  redim pdfList(-1)
 		  
 		  PDFSurvey(ActiveJob.Conf.BaseFolder , pdfList , ActiveJob.Conf.Recursive, KillSurveyFlag)
 		  
@@ -3317,7 +3570,22 @@ End
 		    
 		  end if
 		  
+		  SurveyTimer.RunMode = timer.RunModes.Off
 		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events SurveyTimer
+	#tag Event
+		Sub Action()
+		  dim docsLoaded as Integer = 0
+		  
+		  if not IsNull(ActiveJob) then
+		    if not IsNull(ActiveJob.Stats) then docsLoaded = ActiveJob.Stats.DocsTotal
+		  end if
+		  
+		  FooterLabel.Text = "Survey in progress... " + Integer(pdfList.LastIndex + 1).ToString + " found, " + docsLoaded.ToString + " added to job"
 		End Sub
 	#tag EndEvent
 #tag EndEvents

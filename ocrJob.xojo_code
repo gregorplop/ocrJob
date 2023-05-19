@@ -181,6 +181,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function ocrmypdfHelp() As string
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  s.Execute("ocrmypdf" , "--help")
@@ -193,6 +195,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function ocrmypdfVersionData() As string
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  s.Execute("ocrmypdf" , "--version")
@@ -205,6 +209,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function pdfinfo(fileName as string) As string
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  //s.Execute("pdfinfo" , """" + filename + """") // doesn't work like this
@@ -219,6 +225,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function pdfinfoVersionData() As string
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  s.Execute("pdfinfo" , "-v")
@@ -294,6 +302,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function TesseractListLangs() As string()
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  s.Execute("tesseract" , "--list-langs")
@@ -313,6 +323,8 @@ Protected Module ocrJob
 	#tag Method, Flags = &h0
 		Function TesseractVersionData() As string
 		  dim s as new Shell
+		  
+		  s.TimeOut = ocrJob.ShellTimeout
 		  s.ExecuteMode = shell.ExecuteModes.Synchronous
 		  
 		  s.Execute("tesseract" , "--version")
@@ -412,6 +424,10 @@ Protected Module ocrJob
 		Errors       <- at least one 2,3,4,5,7,8,9,15 or -2
 		Cancelled    <- at least one -3 , 130
 	#tag EndNote
+
+
+	#tag Constant, Name = ShellTimeout, Type = Double, Dynamic = False, Default = \"20000", Scope = Protected
+	#tag EndConstant
 
 
 	#tag Enum, Name = DocumentStates, Type = Integer, Flags = &h1
