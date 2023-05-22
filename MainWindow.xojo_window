@@ -10,7 +10,7 @@ Begin DesktopWindow MainWindow
    HasFullScreenButton=   False
    HasMaximizeButton=   False
    HasMinimizeButton=   True
-   Height          =   734
+   Height          =   730
    ImplicitInstance=   True
    MacProcID       =   0
    MaximumHeight   =   32000
@@ -31,7 +31,7 @@ Begin DesktopWindow MainWindow
       FontName        =   "System"
       FontSize        =   16.0
       FontUnit        =   0
-      Height          =   613
+      Height          =   609
       Index           =   -2147483648
       Italic          =   False
       Left            =   20
@@ -77,7 +77,7 @@ Begin DesktopWindow MainWindow
          HasHorizontalScrollbar=   True
          HasVerticalScrollbar=   True
          HeadingIndex    =   -1
-         Height          =   471
+         Height          =   467
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          InitialValue    =   ""
@@ -119,7 +119,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   True
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   508
+         Height          =   504
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -548,7 +548,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   False
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   503
+         Height          =   499
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -972,7 +972,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1013,7 +1013,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &c000000
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          ValidationMask  =   ""
@@ -1260,7 +1260,7 @@ Begin DesktopWindow MainWindow
          HasBorder       =   False
          HasHorizontalScrollbar=   False
          HasVerticalScrollbar=   True
-         Height          =   503
+         Height          =   499
          HideSelection   =   True
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
@@ -1447,7 +1447,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1479,7 +1479,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   1
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1631,7 +1631,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   3
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1663,7 +1663,7 @@ Begin DesktopWindow MainWindow
          TabPanelIndex   =   4
          TabStop         =   True
          Tooltip         =   ""
-         Top             =   650
+         Top             =   646
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -1704,7 +1704,7 @@ Begin DesktopWindow MainWindow
       End
       Begin DesktopCheckBox LaunchAppOnJobCompleteCheck
          AllowAutoDeactivate=   True
-         Bold            =   False
+         Bold            =   True
          Caption         =   "Launch application on Job complete"
          Enabled         =   True
          FontName        =   "System"
@@ -1728,9 +1728,10 @@ Begin DesktopWindow MainWindow
          Top             =   134
          Transparent     =   False
          Underline       =   False
+         Value           =   False
          Visible         =   True
          VisualState     =   0
-         Width           =   264
+         Width           =   278
       End
       Begin DesktopTextField NextAppField
          AllowAutoDeactivate=   True
@@ -1750,7 +1751,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   316
+         Left            =   330
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -1772,7 +1773,7 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   504
+         Width           =   490
       End
       Begin DesktopButton NextAppSelectBtn
          AllowAutoDeactivate=   True
@@ -1824,7 +1825,7 @@ Begin DesktopWindow MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
-         Left            =   316
+         Left            =   330
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -1846,7 +1847,7 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          ValidationMask  =   ""
          Visible         =   True
-         Width           =   504
+         Width           =   490
       End
       Begin DesktopLabel NextAppArgsLabel
          AllowAutoDeactivate=   True
@@ -1880,6 +1881,70 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          Visible         =   True
          Width           =   128
+      End
+      Begin DesktopCheckBox ThisAppCloseOnLaunchCheck
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Caption         =   "Close ocrJob after successful launch"
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   330
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         Scope           =   2
+         TabIndex        =   5
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   208
+         Transparent     =   False
+         Underline       =   False
+         Value           =   False
+         Visible         =   True
+         VisualState     =   0
+         Width           =   490
+      End
+      Begin DesktopLabel UnderConstructionLabel
+         AllowAutoDeactivate=   True
+         Bold            =   True
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   44.0
+         FontUnit        =   0
+         Height          =   90
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   40
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   0
+         Selectable      =   False
+         TabIndex        =   6
+         TabPanelIndex   =   2
+         TabStop         =   True
+         Text            =   "UNDER CONSTRUCTION"
+         TextAlignment   =   2
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   401
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   920
       End
    End
    Begin DesktopRectangle HeaderRect
@@ -1990,7 +2055,7 @@ Begin DesktopWindow MainWindow
       TabIndex        =   2
       TabPanelIndex   =   0
       Tooltip         =   ""
-      Top             =   707
+      Top             =   703
       Transparent     =   False
       Visible         =   True
       Width           =   1000
@@ -2021,7 +2086,7 @@ Begin DesktopWindow MainWindow
          TextAlignment   =   0
          TextColor       =   &cFFFFFF00
          Tooltip         =   ""
-         Top             =   709
+         Top             =   705
          Transparent     =   False
          Underline       =   False
          Visible         =   True
@@ -2849,6 +2914,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		NextAppFile As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		pdfList() As FolderItem
 	#tag EndProperty
 
@@ -3429,8 +3498,9 @@ End
 		  NextAppArgsLabel.Enabled = me.Value
 		  NextAppField.Enabled = me.Value
 		  NextAppSelectBtn.Enabled = me.Value
+		  ThisAppCloseOnLaunchCheck.Enabled = me.Value
 		  
-		  me.Bold = me.Value
+		  
 		  
 		End Sub
 	#tag EndEvent
@@ -3438,17 +3508,6 @@ End
 #tag Events NextAppSelectBtn
 	#tag Event
 		Sub Pressed()
-		  dim dlg As New SelectFolderDialog
-		  dlg.ActionButtonCaption = "Select"
-		  dlg.Title = "Select Base folder for survey"
-		  dlg.PromptText = "The Base folder is where the PDF survey is going to look for documents"
-		  
-		  Var f As FolderItem
-		  
-		  f = dlg.ShowModal
-		  
-		  if not IsNull(f) then BaseFolderField.Text = f.NativePath
-		  
 		  
 		End Sub
 	#tag EndEvent
@@ -3476,6 +3535,19 @@ End
 		  Return true
 		  
 		End Function
+	#tag EndEvent
+#tag EndEvents
+#tag Events ThisAppCloseOnLaunchCheck
+	#tag Event
+		Sub ValueChanged()
+		  NextAppArgsField.Enabled = me.Value
+		  NextAppArgsLabel.Enabled = me.Value
+		  NextAppField.Enabled = me.Value
+		  NextAppSelectBtn.Enabled = me.Value
+		  
+		  
+		  
+		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events QuitBtn

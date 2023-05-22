@@ -24,6 +24,9 @@ Inherits DesktopApplication
 
 	#tag Method, Flags = &h0
 		Function BuildCmdLineArgs(CmdLineArgs as string) As Dictionary
+		  // simple way, does not take into account double quotes and the like
+		  // todo: more complex method
+		  
 		  dim args() as String = CmdLineArgs.Split("--")
 		  dim argsDict as new Dictionary
 		  
@@ -34,6 +37,7 @@ Inherits DesktopApplication
 		  next i
 		  
 		  Return argsDict
+		  
 		  
 		  
 		End Function
