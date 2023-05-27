@@ -1669,39 +1669,6 @@ Begin DesktopWindow MainWindow
          Visible         =   True
          Width           =   120
       End
-      Begin DesktopLabel LogFolderLabel
-         AllowAutoDeactivate=   True
-         Bold            =   False
-         Enabled         =   True
-         FontName        =   "System"
-         FontSize        =   14.0
-         FontUnit        =   0
-         Height          =   25
-         Index           =   -2147483648
-         InitialParent   =   "MainTabPanel"
-         Italic          =   False
-         Left            =   510
-         LockBottom      =   False
-         LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   True
-         LockTop         =   True
-         Multiline       =   False
-         Scope           =   2
-         Selectable      =   False
-         TabIndex        =   36
-         TabPanelIndex   =   1
-         TabStop         =   True
-         Text            =   "Log Folder"
-         TextAlignment   =   0
-         TextColor       =   &c000000
-         Tooltip         =   ""
-         Top             =   511
-         Transparent     =   False
-         Underline       =   False
-         Visible         =   True
-         Width           =   450
-      End
       Begin DesktopCheckBox LaunchAppOnJobCompleteCheck
          AllowAutoDeactivate=   True
          Bold            =   True
@@ -1945,6 +1912,80 @@ Begin DesktopWindow MainWindow
          Underline       =   False
          Visible         =   True
          Width           =   920
+      End
+      Begin DesktopTextField LogFolderField
+         AllowAutoDeactivate=   True
+         AllowFocusRing  =   True
+         AllowSpellChecking=   False
+         AllowTabs       =   False
+         BackgroundColor =   &cFFFFFF
+         Bold            =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   14.0
+         FontUnit        =   0
+         Format          =   ""
+         HasBorder       =   True
+         Height          =   25
+         Hint            =   "Log folder path"
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   510
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   True
+         LockTop         =   True
+         MaximumCharactersAllowed=   0
+         Password        =   False
+         ReadOnly        =   False
+         Scope           =   2
+         TabIndex        =   36
+         TabPanelIndex   =   1
+         TabStop         =   True
+         Text            =   ""
+         TextAlignment   =   0
+         TextColor       =   &c000000
+         Tooltip         =   ""
+         Top             =   511
+         Transparent     =   False
+         Underline       =   False
+         ValidationMask  =   ""
+         Visible         =   True
+         Width           =   390
+      End
+      Begin DesktopButton LogFolderSelectBtn
+         AllowAutoDeactivate=   True
+         Bold            =   False
+         Cancel          =   False
+         Caption         =   "Select"
+         Default         =   False
+         Enabled         =   True
+         FontName        =   "System"
+         FontSize        =   0.0
+         FontUnit        =   0
+         Height          =   25
+         Index           =   -2147483648
+         InitialParent   =   "MainTabPanel"
+         Italic          =   False
+         Left            =   909
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   False
+         LockRight       =   True
+         LockTop         =   True
+         MacButtonStyle  =   0
+         Scope           =   2
+         TabIndex        =   37
+         TabPanelIndex   =   1
+         TabStop         =   True
+         Tooltip         =   ""
+         Top             =   511
+         Transparent     =   False
+         Underline       =   False
+         Visible         =   True
+         Width           =   51
       End
    End
    Begin DesktopRectangle HeaderRect
@@ -2241,6 +2282,18 @@ End
 		  conf.RotateThreshold = RotateThresholdValue.Text.ToInteger
 		  
 		  conf.LoggingPolicy = LoggingPolicyMenu.RowTagAt(LoggingPolicyMenu.SelectedRowIndex)
+		  
+		  if conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
+		    if IsNull(app.LogFolder) then
+		      ErrorMsg = "Invalid log folder"
+		      Return nil
+		    end if
+		    if not app.LogFolder.Exists then
+		      ErrorMsg = "Log folder does not exist"
+		      Return nil
+		    end if
+		  end if
+		  
 		  
 		  conf.IgnoreIfSubstring = IgnoreIfFilenameContainsCheck.Value
 		  conf.IgnoreIfSubstringValue = IgnoreIfFilenameContainsValue.Text
@@ -2553,10 +2606,11 @@ End
 		    
 		    MainProgressBar.Visible = false
 		    
-		    LogFolderLabel.Text = if(IsNull(app.LogFolder) , "" , app.LogFolder.NativePath)
-		    LogFolderLabel.Enabled = True
+		    LogFolderField.Text = if(IsNull(app.LogFolder) , "" , app.LogFolder.NativePath)
 		    
 		    SaveConsoleBtn.Enabled = False
+		    
+		    WorkflowPanelEnabled(true)
 		    
 		  case AppStates.SurveyInProgress
 		    
@@ -2580,12 +2634,15 @@ End
 		    
 		    KillSurveyFlag = false
 		    
-		    LogFolderLabel.Enabled = False
+		    LogFolderField.Enabled = False
+		    LogFolderSelectBtn.Enabled = false
 		    
 		    MainProgressBar.Visible = true
 		    MainProgressBar.Indeterminate = true
 		    
 		    SaveConsoleBtn.Enabled = False
+		    
+		    WorkflowPanelEnabled(false)
 		    
 		  case AppStates.SurveyError
 		    
@@ -2611,6 +2668,8 @@ End
 		    
 		    SaveConsoleBtn.Enabled = False
 		    
+		    WorkflowPanelEnabled(true)
+		    
 		  case AppStates.SurveyNoDocs
 		    
 		    me.Title = "ocrJob - No Docs"
@@ -2635,6 +2694,8 @@ End
 		    
 		    SaveConsoleBtn.Enabled = False
 		    
+		    WorkflowPanelEnabled(true)
+		    
 		  case AppStates.SurveyOK
 		    
 		    me.Title = "ocrJob - Survey Done"
@@ -2657,6 +2718,8 @@ End
 		    
 		    MainProgressBar.Visible = False
 		    SaveConsoleBtn.Enabled = False
+		    
+		    WorkflowPanelEnabled(False)
 		    
 		  case AppStates.OCRInProgress
 		    
@@ -2685,6 +2748,8 @@ End
 		    
 		    SaveConsoleBtn.Enabled = False
 		    
+		    WorkflowPanelEnabled(False)
+		    
 		  case AppStates.OCRFatalError
 		    
 		    me.Title = "ocrJob - OCR Error"
@@ -2710,6 +2775,8 @@ End
 		    MainProgressBar.Visible = False
 		    
 		    SaveConsoleBtn.Enabled = true
+		    
+		    WorkflowPanelEnabled(true)
 		    
 		  case appstates.OCRWarnings
 		    
@@ -2737,6 +2804,7 @@ End
 		    
 		    SaveConsoleBtn.Enabled = true
 		    
+		    WorkflowPanelEnabled(true)
 		    
 		  case AppStates.OCROK
 		    
@@ -2759,6 +2827,8 @@ End
 		    BuildBatchFileCmd.Enabled = ExportDocListBtn.Enabled
 		    
 		    SaveConsoleBtn.Enabled = true
+		    
+		    WorkflowPanelEnabled(true)
 		    
 		    Timer.CallLater(500 , AddressOf HideProgressBar)
 		    
@@ -2885,6 +2955,20 @@ End
 		Sub UIModeToSetup()
 		  // for delayed call
 		  SetMode(AppStates.Setup)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub WorkflowPanelEnabled(Enabled as Boolean)
+		  LaunchAppOnJobCompleteCheck.Enabled = Enabled
+		  
+		  NextAppArgsField.Enabled = LaunchAppOnJobCompleteCheck.Value and Enabled
+		  NextAppArgsLabel.Enabled = LaunchAppOnJobCompleteCheck.Value and Enabled
+		  NextAppField.Enabled = LaunchAppOnJobCompleteCheck.Value and Enabled
+		  NextAppSelectBtn.Enabled = LaunchAppOnJobCompleteCheck.Value and Enabled
+		  ThisAppCloseOnLaunchCheck.Enabled = LaunchAppOnJobCompleteCheck.Value and Enabled
+		  
+		  
 		End Sub
 	#tag EndMethod
 
@@ -3432,19 +3516,16 @@ End
 		  me.AddRow "None - Save logs manually"
 		  me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.NoLog
 		  
-		  me.SelectedRowIndex = 0
+		  me.AddRow "Autosave Progress and Console to log folder"
+		  me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder
+		  
 		  
 		  if App.CmdLineArgs.HasKey("logfolder") and not IsNull(App.LogFolder) then
-		    me.AddRow "Autosave Progress and Console to log folder"
-		    me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder
 		    me.SelectedRowIndex = 1
+		  else
+		    me.SelectedRowIndex = 0
+		    
 		  end if
-		  
-		  
-		  //me.AddRow "Log file in each folder containing PDFs"
-		  //me.RowTagAt(me.LastRowIndex) = ocrJob.LoggingPolicies.LogFileInFolders
-		  
-		  
 		  
 		End Sub
 	#tag EndEvent
@@ -3453,13 +3534,16 @@ End
 		  select case item.Tag
 		    
 		  case ocrJob.LoggingPolicies.NoLog
-		    LogFolderLabel.Visible = false
+		    LogFolderField.Enabled = false
+		    LogFolderSelectBtn.Enabled = false
 		    
 		  case ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder
-		    LogFolderLabel.Visible = true
+		    LogFolderField.Enabled = true
+		    LogFolderSelectBtn.Enabled = true
 		    
 		  case ocrJob.LoggingPolicies.LogFileInFolders
-		    LogFolderLabel.Visible = false
+		    LogFolderField.Enabled = false
+		    LogFolderSelectBtn.Enabled = false
 		    
 		  end select
 		End Sub
@@ -3501,6 +3585,23 @@ End
 		  ThisAppCloseOnLaunchCheck.Enabled = me.Value
 		  
 		  
+		  app.WorkflowParams.Value("LaunchAppOnJobComplete") = me.Value
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NextAppField
+	#tag Event
+		Sub TextChanged()
+		  dim f as FolderItem
+		  
+		  if me.Text.Trim = "" then
+		    f = nil
+		  else
+		    f = new FolderItem(me.Text)
+		  end if
+		  
+		  app.WorkflowParams.Value("NextApp") = f
 		  
 		End Sub
 	#tag EndEvent
@@ -3536,16 +3637,48 @@ End
 		  
 		End Function
 	#tag EndEvent
+	#tag Event
+		Sub TextChanged()
+		  app.WorkflowParams.Value("NextAppArgs") = me.Text
+		  
+		End Sub
+	#tag EndEvent
 #tag EndEvents
 #tag Events ThisAppCloseOnLaunchCheck
 	#tag Event
 		Sub ValueChanged()
-		  NextAppArgsField.Enabled = me.Value
-		  NextAppArgsLabel.Enabled = me.Value
-		  NextAppField.Enabled = me.Value
-		  NextAppSelectBtn.Enabled = me.Value
+		  app.WorkflowParams.Value("ThisAppCloseOnLaunch") = me.Value
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events LogFolderField
+	#tag Event
+		Sub TextChanged()
+		  if me.Text = "" then
+		    app.LogFolder = nil
+		  else
+		    app.LogFolder = new FolderItem(me.Text)
+		  end if
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events LogFolderSelectBtn
+	#tag Event
+		Sub Pressed()
+		  dim dlg As New SelectFolderDialog
+		  dlg.ActionButtonCaption = "Select"
+		  dlg.Title = "Select Log folder for job"
+		  dlg.PromptText = "The Log folder is where the logs are going to be written on job complete"
+		  
+		  Var f As FolderItem
+		  
+		  f = dlg.ShowModal
+		  
+		  if not IsNull(f) then 
+		    LogFolderField.Text = f.NativePath
+		  end if
 		  
 		End Sub
 	#tag EndEvent

@@ -18,7 +18,7 @@ MinorVersion=1
 SubVersion=0
 NonRelease=5
 Release=0
-InfoVersion=https://github.com/gregorplop/ocrJob
+InfoVersion=ocrJob - The ocrmypdf orchestrator
 LongVersion=Georgios Poulopoulos
 ShortVersion=1
 WinCompanyName=infoplastique
@@ -39,7 +39,7 @@ MDICaption=
 DefaultEncoding=&h0
 AppIcon=ocrJob.xojo_resources;&h0
 OSXBundleID=com.infoplastique.ocrjob
-DebuggerCommandLine=--rotate=3 --logfolder=c:\temp
+DebuggerCommandLine=--logfolder=c:\temp
 UseGDIPlus=False
 UseBuildsFolder=True
 HiDPI=True

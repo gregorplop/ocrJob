@@ -24,6 +24,8 @@ Inherits DesktopApplication
 		    end if
 		  end if
 		  
+		  WorkflowParams = new Dictionary
+		  
 		  
 		End Sub
 	#tag EndEvent
@@ -165,6 +167,10 @@ Inherits DesktopApplication
 
 	#tag Property, Flags = &h0
 		LogFolder As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		WorkflowParams As Dictionary
 	#tag EndProperty
 
 
