@@ -1788,7 +1788,7 @@ Begin DesktopWindow MainWindow
          Format          =   ""
          HasBorder       =   True
          Height          =   25
-         Hint            =   "Application Parameters - Right click to add system variables"
+         Hint            =   "Application Parameters - Right click to add job variables"
          Index           =   -2147483648
          InitialParent   =   "MainTabPanel"
          Italic          =   False
@@ -3609,7 +3609,18 @@ End
 #tag Events NextAppSelectBtn
 	#tag Event
 		Sub Pressed()
+		  Var dlg As New OpenFileDialog
+		  dlg.ActionButtonCaption = "Select Executable"
+		  dlg.CancelButtonCaption = "Cancel"
+		  dlg.Title = "Select Executable"
+		  dlg.PromptText = "Select executable file or script"
+		  dlg.Filter = "exe;bat;cmd"
+		  dlg.AllowMultipleSelections = False
+		  Var f As FolderItem = dlg.ShowModal
 		  
+		  if IsNull(f) then exit sub
+		  
+		  NextAppField.Text = f.NativePath
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -3642,6 +3653,12 @@ End
 		  app.WorkflowParams.Value("NextAppArgs") = me.Text
 		  
 		End Sub
+	#tag EndEvent
+	#tag Event
+		Function ContextualMenuItemSelected(selectedItem As DesktopMenuItem) As Boolean
+		  NextAppArgsField.AddText selectedItem.Tag.StringValue
+		  
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag Events ThisAppCloseOnLaunchCheck
@@ -3739,6 +3756,7 @@ End
 		  
 		  if AppState = AppStates.OCRFatalError or AppState = AppStates.OCROK or AppState = AppStates.OCRWarnings then // if job finishes:
 		    
+		    // write log files
 		    if ActiveJob.Conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
 		      dim ErrorMsg as String
 		      dim logfilename as String = ActiveJob.Stats.JobStampID
@@ -3746,8 +3764,26 @@ End
 		      if not SaveConsoleOutput(app.LogFolder.Child(logfilename + ".txt") , ErrorMsg) then MessageBox ErrorMsg
 		    end if
 		    
+		    // call next application in workflow
+		    if app.WorkflowParams.Value("LaunchAppOnJobComplete").BooleanValue = true then
+		      dim NextApp as FolderItem = FolderItem(app.WorkflowParams.Value("NextApp"))
+		      dim Params as String
+		      if not IsNull(NextApp) then
+		        if NextApp.Exists then
+		          
+		          //WorkflowParams.Value("LaunchAppOnJobComplete") = False
+		          //WorkflowParams.Value("NextApp") = nil // folderitem
+		          //WorkflowParams.Value("NextAppArgs") = ""
+		          //WorkflowParams.Value("ThisAppCloseOnLaunch") = false
+		          
+		          
+		        end if
+		      end if
+		    end if
+		    
+		    
+		    
 		  end if
-		  
 		  
 		End Sub
 	#tag EndEvent

@@ -24,7 +24,13 @@ Inherits DesktopApplication
 		    end if
 		  end if
 		  
+		  
 		  WorkflowParams = new Dictionary
+		  WorkflowParams.Value("LaunchAppOnJobComplete") = False
+		  WorkflowParams.Value("NextApp") = nil // folderitem
+		  WorkflowParams.Value("NextAppArgs") = ""
+		  WorkflowParams.Value("ThisAppCloseOnLaunch") = false
+		  
 		  
 		  
 		End Sub
