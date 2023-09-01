@@ -51,7 +51,7 @@ Begin DesktopWindow MainWindow
       Top             =   82
       Transparent     =   False
       Underline       =   False
-      Value           =   1
+      Value           =   0
       Visible         =   True
       Width           =   960
       Begin DesktopListBox DocList
@@ -2282,6 +2282,8 @@ End
 		  conf.RotateThreshold = RotateThresholdValue.Text.ToInteger
 		  
 		  conf.LoggingPolicy = LoggingPolicyMenu.RowTagAt(LoggingPolicyMenu.SelectedRowIndex)
+		  
+		  if CustomParamsValue.Text.Trim <> "" then conf.CustomParams = CustomParamsValue.Text.Trim
 		  
 		  if conf.LoggingPolicy = ocrJob.LoggingPolicies.AutosaveProgressAndConsoleToLogFolder then
 		    if IsNull(app.LogFolder) then
